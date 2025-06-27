@@ -1,0 +1,30 @@
+# Strict versioning for compatibility with MLflow and pyarrow
+mlflow==2.12.1
+pyarrow==14.0.2
+ensure==1.0.2
+python-box==6.0.2
+tensorflow==2.16.1
+ipykernel==6.29.5
+
+# Dev and ML utilities
+dvc
+Flask
+Flask-Cors
+gdown
+joblib
+notebook
+
+# Data science stack
+numpy
+pandas
+pyyaml         # lowercase preferred in newer PyPI naming
+matplotlib
+scipy
+seaborn
+tqdm
+
+# Type stubs
+types-PyYAML
+
+# Local development
+-e .
