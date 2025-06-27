@@ -1,2 +1,2 @@
-# TumorTracer
+# TumorTracer: MLOps-Ready Chest Cancer Classifier
 TumorTracer: MLOps-Ready Chest Cancer Classifier
