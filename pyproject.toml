@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cnnClassifer"
+version = "0.0.1"
+authors = [
+    { name="Vish501" }
+]
+description = "CNN-based ML classification package"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+
+dependencies = [
+    "mlflow==2.12.1",
+    "pyarrow==14.0.2",
+    "ensure==1.0.2",
+    "python-box==6.0.2",
+    "tensorflow==2.16.1",
+    "ipykernel==6.29.5",
+    "dvc",
+    "Flask",
+    "Flask-Cors",
+    "gdown",
+    "joblib",
+    "notebook",
+    "numpy",
+    "pandas",
+    "pyYAML",
+    "matplotlib",
+    "scipy",
+    "seaborn",
+    "types-PyYAML",
+    "tqdm"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.urls]
+Homepage = "https://github.com/Vish501/TumorTracer"
+Issues = "https://github.com/Vish501/TumorTracer/issues"
