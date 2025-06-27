@@ -1,21 +1,29 @@
-# Logger constructed to track any issues with the code during deployment
+"""
+CNN Classifier Initialization Module
+
+Constructs a logger to track issues during deployment.
+"""
 
 import os
 import sys
 import logging
 
-logging_string = "[%(asctime)s: %(levelname)s: %(module)s: %(message)s]"
+# Log message format
+LOG_FORMAT = "[%(asctime)s: %(levelname)s: %(module)s: %(message)s]"
 
-log_dir = "logs"
-log_filepath = os.path.join(log_dir, "running_logs.log")
-os.makedirs(log_dir, exist_ok=True)
+# Create logs directory if it doesn't exist
+LOG_DIR = "logs"
+LOG_FILEPATH = os.path.join(LOG_DIR, "running_logs.log")
 
+os.makedirs(LOG_FILEPATH, exist_ok=True)
+
+# Configure the logging system
 logging.basicConfig(
     level=logging.INFO,
-    format=logging_string,
+    format=LOG_FORMAT,
 
     handlers=[
-        logging.FileHandler(log_filepath),
+        logging.FileHandler(LOG_FILEPATH),
         logging.StreamHandler(sys.stdout)
     ]
 )
