@@ -22,7 +22,8 @@ list_of_files = [
     "pyproject.toml",
     "requirements.txt",
     "research/trials.ipynb",
-    "templates/index.html"
+    "templates/index.html",
+    "app.py"
 ]
 
 # Iterate through each file path
