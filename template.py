@@ -19,7 +19,7 @@ list_of_files = [
     "config/config.yaml",
     "dvc.yaml",
     "params.yaml",
-    "setup.py",
+    "pyproject.toml",
     "requirements.txt",
     "research/trials.ipynb",
     "templates/index.html"
