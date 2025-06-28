@@ -42,6 +42,7 @@ def read_yaml(path: Path) -> ConfigBox:
         with open(path) as yaml_file:
             content = yaml.safe_load(yaml_file)
             logger.info(f"Read YAML file: {path} loaded successfully")
+            return ConfigBox(content)
 
     except FileNotFoundError as fnf_error:
         # Log and re-raise file not found errors
