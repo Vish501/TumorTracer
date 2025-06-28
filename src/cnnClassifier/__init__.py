@@ -28,5 +28,5 @@ logging.basicConfig(
     ]
 )
 
-# Named logger to be reused across the entire cnnClassifer package
+# Global logger to be reused across the entire cnnClassifer package
 logger = logging.getLogger("cnnClassifierLogger")
