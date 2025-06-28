@@ -6,7 +6,7 @@ import base64
 
 from cnnClassifier import logger
 from box.exceptions import BoxValueError
-from ensure import ensure_annotations
+from ensure import ensure_annotations          # Enforces runtime validation of the function’s argument and return types
 from box import ConfigBox
 from pathlib import Path
 from typing import Any, Union
@@ -22,8 +22,41 @@ def read_yaml(path: Path) -> ConfigBox:
 
     Returns:
     - ConfigBox: Parsed YAML content as a dot-accessible dictionary.
+
+    Raises:
+    - FileNotFoundError: If the YAML file does not exist.
+    - Exception: For any other unhandled exceptions.
     """
-    pass
+    try:
+        # Check if the file exists
+        if not path.exists():
+            logger.error(f"YAML file not found at: {path}")
+            raise FileNotFoundError(f"YAML file not found at: {path}")
+        
+        # Check if the file has a valid YAML extension
+        if path.suffix not in [".yaml", ".yml"]:
+            logger.error(f"Invalid file type: {path.name} is not a YAML file.")
+            raise FileNotFoundError(f"Invalid file type: {path.name} is not a YAML file.")
+        
+        # Attempt to read and parse the YAML file
+        with open(path) as yaml_file:
+            content = yaml.safe_load(yaml_file)
+            logger.info(f"Read YAML file: {path} loaded successfully")
+
+    except FileNotFoundError as fnf_error:
+        # Log and re-raise file not found errors
+        logger.error(fnf_error)
+        raise fnf_error
+
+    except BoxValueError:
+        # Raised if ConfigBox receives invalid (e.g., None) content
+        logger.error(f"Failed to parse YAML into ConfigBox: Possibly empty or malformed.")
+        raise ValueError("YAML file is either empty or invalid")
+    
+    except Exception as e:
+        # Catch-all for other exceptions
+        logger.error(f"Unexpected error while reading YAML file:  {e}")
+        raise e
 
 
 @ensure_annotations
@@ -93,7 +126,7 @@ def load_bin(path: Path) -> Any:
 def get_kb_size(path: Path) -> str:
     """
     Returns the size of a file in kilobytes (KB).
-    
+
     Parameters:
     - path (Path): Path to the file whose size is to be computed.
 
