@@ -113,8 +113,8 @@ def save_json(save_path: Path, data: Any) -> None:
     - Exception: For any other unhandled errors.
     """
     try:
-        # Ensure parent directory exists
-        save_path.parent.mkdir(parents=True, exist_ok=True)
+        # Ensure parent directory exists using our utility function
+        create_directories([save_path.parent])
 
         # Write JSON to file
         with open(save_path, "w") as f:
