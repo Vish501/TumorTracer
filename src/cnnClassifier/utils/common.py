@@ -219,6 +219,7 @@ def save_bin(save_path: Path, data: Any) -> None:
     """
     pass
 
+
 @ensure_annotations
 def load_bin(path: Path) -> Any:
     """
@@ -268,4 +269,5 @@ def encode_image_Base64(path: Union[str, Path]) -> str:
     Returns:
     - str: Base64-encoded image content as a string.
     """
-    pass
+    with open(path, "rb") as file:
+        return base64.b64encode(file.read())
