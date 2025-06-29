@@ -26,6 +26,8 @@ def read_yaml(path: Path) -> ConfigBox:
 
     Raises:
     - FileNotFoundError: If the YAML file does not exist.
+    - BoxValueError: If the YAML file is malformed or empty.
+    - yaml.YAMLError: If YAML syntax is invalid.
     - Exception: For any other unhandled exceptions.
     """
     try:
@@ -40,7 +42,7 @@ def read_yaml(path: Path) -> ConfigBox:
             raise FileNotFoundError(f"Invalid file type: {path.name} is not a YAML file.")
         
         # Attempt to read and parse the YAML file
-        with open(path) as yaml_file:
+        with open(path, "r", encoding="utf-8") as yaml_file:
             content = yaml.safe_load(yaml_file)
             logger.info(f"YAML file: {path} loaded successfully")
             return ConfigBox(content)
@@ -54,6 +56,10 @@ def read_yaml(path: Path) -> ConfigBox:
         # Raised if ConfigBox receives invalid (e.g., None) content
         logger.error(f"Failed to parse YAML into ConfigBox: Possibly empty or malformed.")
         raise ValueError("YAML file is either empty or invalid")
+    
+    except yaml.YAMLError as exception_error:
+        logger.error(f"Failed to parse YAML syntax: {exception_error}")
+        raise ValueError(f"Invalid YAML format in file: {path}")
     
     except Exception as exception_error:
         # Catch-all for other exceptions
