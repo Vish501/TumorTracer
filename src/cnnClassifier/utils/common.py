@@ -245,7 +245,8 @@ def get_kb_size(path: Path) -> str:
     Returns:
     - str: File size in kilobytes, as a string with 'KB' suffix.
     """
-    pass
+    size_in_kb = round(os.path.getsize(path) / 1024)
+    return f"~ {size_in_kb} KB"
 
 
 def decode_image_Base64(image_string: str, save_path: Union[str, Path]) -> None:
@@ -259,6 +260,7 @@ def decode_image_Base64(image_string: str, save_path: Union[str, Path]) -> None:
     image = base64.b64decode(image_string)
     with open(save_path, "wb") as file:
         file.write(image)
+        logger.info(f"Image decoded and saved at: {save_path}")
 
 
 def encode_image_Base64(path: Union[str, Path]) -> str:
@@ -272,4 +274,6 @@ def encode_image_Base64(path: Union[str, Path]) -> str:
     - str: Base64-encoded image content as a string.
     """
     with open(path, "rb") as file:
-        return base64.b64encode(file.read())
+        image_string = base64.b64encode(file.read())
+        logger.info(f"Image decoded and saved at: {save_path}")
+        return image_string
