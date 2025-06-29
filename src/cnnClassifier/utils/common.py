@@ -153,12 +153,53 @@ def load_json(path: Path) -> ConfigBox:
 
     Returns:
     - ConfigBox: Parsed JSON content with dot-access support.
+
+    Raises:
+    - FileNotFoundError: If the file does not exist.
+    - BoxValueError: If the JSON is malformed or empty.
+    - PermissionError: If the file cannot be read due to permission issues.
+    - json.JSONDecodeError: If the file isn't valid JSON.
+    - Exception: For other unexpected issues.
     """
-    with open(path, "r") as file:
-        content = json.load(file)
-    logger.info(f"JSON file succesfully loaded form: {path}")
+    try:
+        if not path.exists():
+            logger.error(f"JSON file not found at: {path}")
+            raise FileNotFoundError(f"JSON file not found at: {path}")
+        
+        # Check if the file has a valid YAML extension
+        if path.suffix.lower() not in [".json"]:
+            logger.error(f"Invalid file type: {path.name} is not a JSON file.")
+            raise FileNotFoundError(f"Invalid file type: {path.name} is not a JSON file.")
+
+        # Attempt to read a load JSON file
+        with open(path, "r", encoding="utf-8") as file:
+            content = json.load(file)
+            logger.info(f"JSON file succesfully loaded form: {path}")
+            return ConfigBox(content)
+
+    except FileNotFoundError as exception_error:
+        # Log and re-raise file not found errors
+        logger.error(f"File not found: {exception_error}")
+        raise exception_error
+
+    except BoxValueError as exception_error:
+        # Raised if ConfigBox receives invalid (e.g., None) content
+        logger.error(f"Failed to parse JSON into ConfigBox: Possibly empty or malformed: {exception_error}")
+        raise ValueError("JSON file is either empty or invalid")
     
-    return ConfigBox(content)
+    except PermissionError as exception_error:
+        logger.error(f"Permission denied while reading JSON file at: {path}")
+        raise exception_error
+
+    except json.JSONDecodeError as exception_error:
+        # Handles JSON syntax issues explicitly (e.g. missing commas, braces).
+        logger.error(f"Failed to decode JSON file at: {path}")
+        raise exception_error
+    
+    except Exception as exception_error:
+        # Catch-all for other exceptions
+        logger.error(f"Unexpected error while reading JSON file: {exception_error}")
+        raise exception_error
 
 
 @ensure_annotations
