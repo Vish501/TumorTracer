@@ -216,9 +216,41 @@ def save_bin(save_path: Path, data: Any) -> None:
     Parameters:
     - save_path (Path): File path where the binary file will be saved.
     - data (Any): Any Python object to be serialized and stored.
+
+    Raises:
+    - FileNotFoundError: If the directory to save the file doesn't exist.
+    - PermissionError: If write access is denied at the save path.
+    - TypeError: If the object cannot be serialized by joblib.
+    - Exception: For any other unexpected errors.
     """
-    joblib.dump(value=data, filename=save_path)
-    logger.info(f"Binary file saved at: {save_path}")
+    try:
+        # Ensure parent directory exists using our utility function
+        save_path = Path(save_path)
+        create_directories([save_path.parent])
+
+        # Serialize and save the data using joblib
+        joblib.dump(value=data, filename=save_path)
+        logger.info(f"Binary file saved at: {save_path}")
+
+    except FileNotFoundError as exception_error:
+        # Raised if the path is invalid (rare here because we’re creating it, but still a good fallback).
+        logger.error(f"Directory not found for saving binary file at: {save_path.parent}")
+        raise exception_error
+
+    except PermissionError as exception_error:
+        # Happens when we try saving to protected locations
+        logger.error(f"Permission denied to save file at: {save_path}")
+        raise exception_error
+    
+    except TypeError as exception_error:
+        # Raised when the data can't be serialized
+        logger.error(f"Failed to seialize data to a binary file at {save_path}: {exception_error}")
+        raise exception_error
+
+    except Exception as exception_error:
+        # Catch-all for other exceptions
+        logger.error(f"Unexpected error while saving JSON to {save_path}: {exception_error}")
+        raise exception_error
 
 
 @ensure_annotations
