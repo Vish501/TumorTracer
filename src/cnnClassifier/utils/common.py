@@ -117,8 +117,8 @@ def save_json(save_path: Path, data: Any) -> None:
         create_directories([save_path.parent])
 
         # Write JSON to file
-        with open(save_path, "w") as f:
-            json.dump(data, f, indent=4)
+        with open(save_path, "w") as file:
+            json.dump(data, file, indent=4)
 
         logger.info(f"JSON file saved at: {save_path}")
 
@@ -154,7 +154,11 @@ def load_json(path: Path) -> ConfigBox:
     Returns:
     - ConfigBox: Parsed JSON content with dot-access support.
     """
-    pass
+    with open(path, "r") as file:
+        content = json.load(file)
+    logger.info(f"JSON file succesfully loaded form: {path}")
+    
+    return ConfigBox(content)
 
 
 @ensure_annotations
