@@ -253,6 +253,7 @@ def get_kb_size(path: Path) -> str:
     return f"~ {size_in_kb} KB"
 
 
+@ensure_annotations
 def decode_image_Base64(image_string: str, save_path: Union[str, Path]) -> None:
     """
     Decodes a base64 string and writes it as an image file.
@@ -267,6 +268,7 @@ def decode_image_Base64(image_string: str, save_path: Union[str, Path]) -> None:
         logger.info(f"Image decoded and saved at: {save_path}")
 
 
+@ensure_annotations
 def encode_image_Base64(path: Union[str, Path]) -> str:
     """
     Reads an image file and returns its base64-encoded content as a UTF-8 string.
@@ -276,8 +278,42 @@ def encode_image_Base64(path: Union[str, Path]) -> str:
 
     Returns:
     - str: Base64-encoded image content as a string.
+
+    Raises:
+    - FileNotFoundError: If the file does not exist.
+    - PermissionError: If the file cannot be accessed due to permission.
+    - IsADirectoryError: If the path is a directory.
+    - Exception: For any other unexpected errors.
     """
-    with open(path, "rb") as file:
-        image_string = base64.b64encode(file.read())
-        logger.info(f"Image decoded and saved at: {save_path}")
-        return image_string
+    try:
+        path = Path(path)
+
+        if not path.exists():
+            raise FileNotFoundError(f"File not found: {path}")
+        
+        if not path.is_file():
+            raise IsADirectoryError(f"Object found is not a file at: {path}")
+
+        with open(path, "rb") as file:
+            image_string = base64.b64encode(file.read())
+            encoded_string = image_string.decode("utf-8")
+            logger.info(f"Image decoded and saved at: {path}")
+            return encoded_string
+
+    except FileNotFoundError as exception_error:
+        logger.error(f"{exception_error}")
+        raise exception_error
+
+    except PermissionError as exception_error:
+        logger.error(f"Permission denied while reading file at: {path}")
+        raise exception_error
+
+    except IsADirectoryError as exception_error:
+        logger.error(f"{exception_error}")
+        raise exception_error
+    
+    except Exception as exception_error:
+        # Catch-all for other exceptions
+        logger.error(f"Unexpected error while encoding image at {path}: {exception_error}")
+        raise exception_error
+    
