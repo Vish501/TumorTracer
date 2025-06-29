@@ -42,7 +42,7 @@ def read_yaml(path: Path) -> ConfigBox:
         # Attempt to read and parse the YAML file
         with open(path) as yaml_file:
             content = yaml.safe_load(yaml_file)
-            logger.info(f"Read YAML file: {path} loaded successfully")
+            logger.info(f"YAML file: {path} loaded successfully")
             return ConfigBox(content)
 
     except FileNotFoundError as fnf_error:
@@ -57,20 +57,45 @@ def read_yaml(path: Path) -> ConfigBox:
     
     except Exception as e:
         # Catch-all for other exceptions
-        logger.error(f"Unexpected error while reading YAML file:  {e}")
+        logger.error(f"Unexpected error while reading YAML file: {e}")
         raise e
 
 
 @ensure_annotations
-def create_directories(path_list: list, verbose=True) -> None:
+def create_directories(path_list: list, verbose: bool=True) -> None:
     """
     Creates directories from the given list of paths if they don't already exist.
 
     Parameters:
-    - path_list (list): List of directory paths to create.
+    - path_list (list[Union[str, Path]]): List of directory paths to create.
     - verbose (bool): If True, prints log messages when directories are created.
+
+    Raises:
+    - TypeError: If path_list contains invalid types.
+    - OSError: If directory creation fails due to permission or filesystem error.
     """
-    pass
+    for path in path_list:
+        try:
+            if not isinstance(path, (str, Path)):
+                if verbose:
+                    logger.error(f"Invalid path: {path} must be a str or Path.")
+                raise TypeError(f"Invalid path: {path} must be a str or Path.")
+            
+            # Attempt to create the directory
+            path_object = Path(path)
+            
+            path_object.mkdir(parents=True, exist_ok=True)
+            if verbose:
+                logger.info(f"Directory: {path_object} created successfully.")
+        
+        except OSError as os_error:
+            logger.error(f"OS error while creating {path}: {os_error}")
+            raise os_error
+
+        except Exception as e:
+            # Catch-all for other exceptions
+            logger.error(f"Unexpected error while creating {path}: {e}")
+            raise e
 
 
 @ensure_annotations
