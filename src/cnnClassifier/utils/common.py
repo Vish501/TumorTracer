@@ -140,7 +140,7 @@ def save_json(save_path: Path, data: Any) -> None:
 
     except PermissionError as exception_error:
         # Happens when we try saving to protected locations
-        logger.error(f"Permission deined to save file at: {save_path}")
+        logger.error(f"Permission denied to save file at: {save_path}")
         raise exception_error
 
     except Exception as exception_error:
@@ -261,11 +261,47 @@ def decode_image_Base64(image_string: str, save_path: Union[str, Path]) -> None:
     Parameters:
     - image_string (str): Base64-encoded image string.
     - save_path (str or Path): File path where the image should be saved.
+
+    Raises:
+    - FileNotFoundError: If the directory path does not exist.
+    - PermissionError: If the program lacks permission to write.
+    - ValueError: If the base64 string is malformed or empty.
+    - Exception: For any other unexpected errors. 
     """
-    image = base64.b64decode(image_string)
-    with open(save_path, "wb") as file:
-        file.write(image)
-        logger.info(f"Image decoded and saved at: {save_path}")
+    try:
+        # Ensure parent directory exists using our utility function
+        save_path = Path(save_path)
+        create_directories([save_path.parent])
+
+        # Making sure the image string provided is not empty
+        if not image_string.strip():
+            logger.error("Provided base64 string is empty.")
+            raise ValueError("Base64 string cannot be empty.")
+
+        # Process string to image
+        image_bytes = base64.b64decode(image_string)
+        with open(save_path, "wb") as file:
+            file.write(image_bytes)
+            logger.info(f"Image decoded and saved at: {save_path}")
+
+    except FileNotFoundError as exception_error:
+        # Raised if the path is invalid (rare here because we’re creating it, but still a good fallback).
+        logger.error(f"Directory not found for saving image at: {save_path.parent}")
+        raise exception_error
+
+    except PermissionError as exception_error:
+        # Happens when we try saving to protected locations
+        logger.error(f"Permission denied to save image at: {save_path}")
+        raise exception_error
+
+    except base64.binascii.Error as exception_error:
+        logger.error(f"Failed to decode base64 string: {exception_error}")
+        raise ValueError("Invalid base64-encoded data.")
+
+    except Exception as exception_error:
+        # Catch-all for other exceptions
+        logger.error(f"Unexpected error while saving image to {save_path}: {exception_error}")
+        raise exception_error
 
 
 @ensure_annotations
