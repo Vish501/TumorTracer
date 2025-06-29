@@ -35,7 +35,7 @@ def read_yaml(path: Path) -> ConfigBox:
             raise FileNotFoundError(f"YAML file not found at: {path}")
         
         # Check if the file has a valid YAML extension
-        if path.suffix not in [".yaml", ".yml"]:
+        if path.suffix.lower() not in [".yaml", ".yml"]:
             logger.error(f"Invalid file type: {path.name} is not a YAML file.")
             raise FileNotFoundError(f"Invalid file type: {path.name} is not a YAML file.")
         
