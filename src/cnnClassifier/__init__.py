@@ -1,7 +1,7 @@
 """
 CNN Classifier Initialization Module
 
-Constructs a logger to track issues during deployment.
+Constructs a logger to track issues.
 """
 
 import os
@@ -11,22 +11,41 @@ import logging
 # Log message format
 LOG_FORMAT = "[%(asctime)s: %(levelname)s: %(module)s: %(message)s]"
 
-# Create logs directory if it doesn't exist
-LOG_DIR = "logs"
-LOG_FILEPATH = os.path.join(LOG_DIR, "running_logs.log")
+def get_logger(log_type: str = "running") -> logging.Logger:
+    """
+    Returns a configured logger that writes to either running_logs.log or test_logs.log.
 
-os.makedirs(LOG_FILEPATH, exist_ok=True)
+    Parameters:
+    - log_type (str): "running" or "test", defaults to "running".
 
-# Configure the logging system
-logging.basicConfig(
-    level=logging.INFO,
-    format=LOG_FORMAT,
+    Returns:
+    - logging.Logger: Configured logger instance.
+    """ 
+    log_name = f"cnnClassifierLogger_{'running' if log_type == 'running' else 'test'}"
+    logger = logging.getLogger(log_name)
+    logger.setLevel(logging.INFO)
 
-    handlers=[
-        logging.FileHandler(LOG_FILEPATH),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
+    # Prevent duplicate handlers
+    if logger.hasHandlers():
+        logger.handlers.clear()
 
-# Global logger to be reused across the entire cnnClassifer package
-logger = logging.getLogger("cnnClassifierLogger")
+    # Create logs directory if it doesn't exist
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+    log_dir = os.path.join(root_dir, "logs")
+    os.makedirs(log_dir, exist_ok=True)
+
+    log_filename = "running_logs.log" if log_type == "running" else "test_logs.log"
+    log_path = os.path.join(log_dir, log_filename)
+
+    # File handlers
+    file_handler = logging.FileHandler(log_path)
+    file_handler.setFormatter(logging.Formatter(LOG_FORMAT))
+
+    # Stream handlers
+    stream_handler = logging.StreamHandler(sys.stdout)
+    stream_handler.setFormatter(logging.Formatter(LOG_FORMAT))
+
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
+
+    return logger
