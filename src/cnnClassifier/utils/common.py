@@ -310,9 +310,41 @@ def get_kb_size(path: Path) -> str:
 
     Returns:
     - str: File size in kilobytes, as a string with 'KB' suffix.
+
+    Raises:
+    - FileNotFoundError: If the file does not exist.
+    - IsADirectoryError: If the path points to a directory, not a file.
+    - PermissionError: If the file exists but access is denied.
+    - Exception: For any other unexpected errors.
     """
-    size_in_kb = round(os.path.getsize(path) / 1024)
-    return f"~ {size_in_kb} KB"
+    try:
+        if not path.exists():
+            logger.error(f"File not found at: {path}")
+            raise FileNotFoundError(f"File not found at: {path}")
+
+        if path.is_dir():
+            logger.error(f"Expected a file but got a directory: {path}")
+            raise IsADirectoryError(f"{path} is a directory, not a file.")
+        
+        size_in_kb = round(os.path.getsize(path) / 1024)
+        return f"~ {size_in_kb} KB"
+
+    except FileNotFoundError as exception_error:
+        logger.error(f"{exception_error}")
+        raise exception_error
+
+    except PermissionError as exception_error:
+        logger.error(f"Permission denied while accessing file at: {path}")
+        raise exception_error
+
+    except IsADirectoryError as exception_error:
+        logger.error(f"{exception_error}")
+        raise exception_error
+    
+    except Exception as exception_error:
+        # Catch-all for other exceptions
+        logger.error(f"Unexpected error while accessing file at {path}: {exception_error}")
+        raise exception_error
 
 
 @ensure_annotations
