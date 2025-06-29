@@ -77,8 +77,7 @@ def create_directories(path_list: list, verbose: bool=True) -> None:
     for path in path_list:
         try:
             if not isinstance(path, (str, Path)):
-                if verbose:
-                    logger.error(f"Invalid path: {path} must be a str or Path.")
+                logger.error(f"Invalid path: {path} must be a str or Path.")
                 raise TypeError(f"Invalid path: {path} must be a str or Path.")
             
             # Attempt to create the directory
