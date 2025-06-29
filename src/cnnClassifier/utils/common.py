@@ -232,6 +232,10 @@ def load_bin(path: Path) -> Any:
     Returns:
     - Any: The original Python object that was serialized.
     """
+    with open(path, "r", encoding="utf-8") as file:
+        content = joblib.load(file)
+        logger.info(f"Binary file succesfully loaded form: {path}")
+        return content
 
 
 @ensure_annotations
