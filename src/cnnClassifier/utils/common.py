@@ -217,7 +217,8 @@ def save_bin(save_path: Path, data: Any) -> None:
     - save_path (Path): File path where the binary file will be saved.
     - data (Any): Any Python object to be serialized and stored.
     """
-    pass
+    joblib.dump(value=data, filename=save_path)
+    logger.info(f"Binary file saved at: {save_path}")
 
 
 @ensure_annotations
@@ -231,7 +232,6 @@ def load_bin(path: Path) -> Any:
     Returns:
     - Any: The original Python object that was serialized.
     """
-    pass
 
 
 @ensure_annotations
