@@ -297,7 +297,7 @@ def encode_image_Base64(path: Union[str, Path]) -> str:
         with open(path, "rb") as file:
             image_string = base64.b64encode(file.read())
             encoded_string = image_string.decode("utf-8")
-            logger.info(f"Image decoded and saved at: {path}")
+            logger.info(f"Image successfully encoded to base64 from: {path}")
             return encoded_string
 
     except FileNotFoundError as exception_error:
