@@ -4,13 +4,14 @@ import json
 import joblib
 import base64
 
-from cnnClassifier import logger
+from cnnClassifier import get_logger
 from box.exceptions import BoxValueError
 from ensure import ensure_annotations          # Enforces runtime validation of the function’s argument and return types
 from box import ConfigBox
 from pathlib import Path
 from typing import Any, Union
 
+logger = get_logger("test")
 
 @ensure_annotations
 def read_yaml(path: Path) -> ConfigBox:
