@@ -175,7 +175,7 @@ def load_json(path: Path) -> ConfigBox:
         # Check if the file has a valid YAML extension
         if path.suffix.lower() not in [".json"]:
             logger.error(f"Invalid file type: {path.name} is not a JSON file.")
-            raise FileNotFoundError(f"Invalid file type: {path.name} is not a JSON file.")
+            raise ValueError(f"Invalid file type: {path.name} is not a JSON file.")
 
         # Attempt to read a load JSON file
         with open(path, "r", encoding="utf-8") as file:
@@ -263,11 +263,41 @@ def load_bin(path: Path) -> Any:
 
     Returns:
     - Any: The original Python object that was serialized.
+
+    Raises:
+    - FileNotFoundError: If the file does not exist.
+    - PermissionError: If the file cannot be read due to permission issues.
+    - ValueError: If the file has an incorrect extension.
+    - Exception: For other unexpected issues.
     """
-    with open(path, "r", encoding="utf-8") as file:
-        content = joblib.load(file)
-        logger.info(f"Binary file succesfully loaded form: {path}")
-        return content
+    try:
+        if not path.exists():
+            logger.error(f"Binary file not found at: {path}")
+            raise FileNotFoundError(f"Binary file not found at: {path}")
+        
+        # Check if the file has a valid YAML extension
+        if path.suffix.lower() not in [".bin", ".pkl"]:
+            logger.error(f"Invalid file type: {path.name} is not a .bin or .pkl file.")
+            raise ValueError(f"Invalid file type: {path.name} is not a .bin or .pkl file.")
+        
+        with open(path, "rb") as file:
+            content = joblib.load(file)
+            logger.info(f"Binary file succesfully loaded form: {path}")
+            return content
+    
+    except FileNotFoundError as exception_error:
+        # Log and re-raise file not found errors
+        logger.error(f"File not found: {exception_error}")
+        raise exception_error
+    
+    except PermissionError as exception_error:
+        logger.error(f"Permission denied while reading Binary file at: {path}")
+        raise exception_error
+    
+    except Exception as exception_error:
+        # Catch-all for other exceptions
+        logger.error(f"Unexpected error while reading Binary file: {exception_error}")
+        raise exception_error
 
 
 @ensure_annotations
