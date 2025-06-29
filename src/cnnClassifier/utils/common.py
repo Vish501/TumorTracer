@@ -45,20 +45,20 @@ def read_yaml(path: Path) -> ConfigBox:
             logger.info(f"YAML file: {path} loaded successfully")
             return ConfigBox(content)
 
-    except FileNotFoundError as fnf_error:
+    except FileNotFoundError as exception_error:
         # Log and re-raise file not found errors
-        logger.error(fnf_error)
-        raise fnf_error
+        logger.error(f"File not found: {exception_error}")
+        raise exception_error
 
     except BoxValueError:
         # Raised if ConfigBox receives invalid (e.g., None) content
         logger.error(f"Failed to parse YAML into ConfigBox: Possibly empty or malformed.")
         raise ValueError("YAML file is either empty or invalid")
     
-    except Exception as e:
+    except Exception as exception_error:
         # Catch-all for other exceptions
-        logger.error(f"Unexpected error while reading YAML file: {e}")
-        raise e
+        logger.error(f"Unexpected error while reading YAML file: {exception_error}")
+        raise exception_error
 
 
 @ensure_annotations
@@ -87,14 +87,14 @@ def create_directories(path_list: list, verbose: bool=True) -> None:
             if verbose:
                 logger.info(f"Directory: {path_object} created successfully.")
         
-        except OSError as os_error:
-            logger.error(f"OS error while creating {path}: {os_error}")
-            raise os_error
+        except OSError as exception_error:
+            logger.error(f"OS error while creating {path}: {exception_error}")
+            raise exception_error
 
-        except Exception as e:
+        except Exception as exception_error:
             # Catch-all for other exceptions
-            logger.error(f"Unexpected error while creating {path}: {e}")
-            raise e
+            logger.error(f"Unexpected error while creating {path}: {exception_error}")
+            raise exception_error
 
 
 @ensure_annotations
@@ -105,8 +105,42 @@ def save_json(save_path: Path, data: Any) -> None:
     Parameters:
     - save_path (Path): Destination path for the JSON file.
     - data (Any): Serializable data (usually dict or list) to store in JSON format.
+
+    Raises:
+    - TypeError: If data contains unserializable objects.
+    - FileNotFoundError: If the directory path does not exist.
+    - PermissionError: If the program lacks permission to write.
+    - Exception: For any other unhandled errors.
     """
-    pass
+    try:
+        # Ensure parent directory exists
+        save_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Write JSON to file
+        with open(save_path, "w") as f:
+            json.dump(data, f, indent=4)
+
+        logger.info(f"JSON file saved at: {save_path}")
+
+    except TypeError as exception_error:
+        # Raised when the data can't be serialized (e.g., a set, custom object, or a NumPy array without conversion).
+        logger.error(f"Failed to seialize data to JSON at {save_path}: {exception_error}")
+        raise exception_error
+
+    except FileNotFoundError as exception_error:
+        # Raised if the path is invalid (rare here because we’re creating it, but still a good fallback).
+        logger.error(f"Directory not found for saving JSON at: {save_path.parent}")
+        raise exception_error
+
+    except PermissionError as exception_error:
+        # Happens when we try saving to protected locations
+        logger.error(f"Permission deined to save file at: {save_path}")
+        raise exception_error
+
+    except Exception as exception_error:
+        # Catch-all for other exceptions
+        logger.error(f"Unexpected error while saving JSON to {save_path}: {exception_error}")
+        raise exception_error
 
 
 @ensure_annotations
