@@ -256,7 +256,9 @@ def decode_image_Base64(image_string: str, save_path: Union[str, Path]) -> None:
     - image_string (str): Base64-encoded image string.
     - save_path (str or Path): File path where the image should be saved.
     """
-    pass
+    image = base64.b64decode(image_string)
+    with open(save_path, "wb") as file:
+        file.write(image)
 
 
 def encode_image_Base64(path: Union[str, Path]) -> str:
