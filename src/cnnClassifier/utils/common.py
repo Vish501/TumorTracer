@@ -6,7 +6,7 @@ import base64
 
 from cnnClassifier import get_logger
 from box.exceptions import BoxValueError
-from ensure import ensure_annotations          # Enforces runtime validation of the function’s argument and return types
+from typeguard import typechecked as ensure_annotations          # Enforces runtime validation of the function’s argument and return types
 from box import ConfigBox
 from pathlib import Path
 from typing import Any, Union
