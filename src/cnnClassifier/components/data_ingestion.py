@@ -3,7 +3,9 @@ import zipfile
 from cnnClassifier.entity.config_entity import DataIngestionConfig
 from cnnClassifier import get_logger
 
+# Initializing the logger
 logger = get_logger()
+
 
 class DataIngestion:
     def __init__(self, config: DataIngestionConfig):

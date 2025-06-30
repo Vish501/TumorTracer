@@ -2,7 +2,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from cnnClassifier import get_logger
 
+# Initializing the logger
 logger = get_logger()
+
 
 @dataclass(frozen=True)
 class DataIngestionConfig:
