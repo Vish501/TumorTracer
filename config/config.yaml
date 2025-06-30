@@ -2,8 +2,6 @@ artifacts_root: artifacts
 
 data_ingestion:
   root_dir: artifacts/data_ingestion
-  kaggle_dataset:
-    owner: mohamedhanyyy/chest-ctscan-images
-    name: chest-ctscan-images
-  download_zip: chest-ctscan-images.zip
-  extracted_file: chest-ctscan-images
+  kaggle_dataset: "mohamedhanyyy/chest-ctscan-images"
+  download_zip: cartifacts/data_ingestion/chest-ctscan-images.zip
+  extracted_file: artifacts/data_ingestion
