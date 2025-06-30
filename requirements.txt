@@ -18,7 +18,7 @@ dotenv==1.1.1                 # Environment variables
 dvc==3.60.1                   # Data version control
 joblib==1.5.1                 # Parallel processing
 gdown==5.2.0                  # Google Drive downloader
-ensure==1.0.2                 # Runtime type validation
+typeguard==4.13.2             # Runtime type validation
 python-box==6.0.2             # Dot-access dictionaries
 pyyaml==6.0.2                 # YAML parsing
 types-PyYAML==6.0.12.20250516 # Type stubs for PyYAML
