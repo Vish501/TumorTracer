@@ -3,5 +3,5 @@ artifacts_root: artifacts
 data_ingestion:
   root_dir: artifacts/data_ingestion
   kaggle_dataset: "mohamedhanyyy/chest-ctscan-images"
-  download_zip: cartifacts/data_ingestion/chest-ctscan-images.zip
+  download_zip: artifacts/data_ingestion/data.zip
   extracted_file: artifacts/data_ingestion
