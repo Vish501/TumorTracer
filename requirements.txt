@@ -13,6 +13,9 @@ matplotlib==3.10.3            # Plotting and visualization
 seaborn==0.13.2               # Statistical data visualization
 tqdm==4.67.1                  # Progress bars
 
+# === Data Science Essentials ===
+kaggle=1.7.4.5                # Loading dataset
+
 # === Dev Tools & Utilities ===
 dotenv==1.1.1                 # Environment variables
 dvc==3.60.1                   # Data version control
