@@ -1,1 +1,12 @@
-key: value
+base_model:
+  IMAGE_SIZE: [224, 224, 3] # As per VGG 16 model
+  INCLUDE_TOP: False
+  CLASSES: 4
+  WEIGHTS: imagenet
+  LEARNING_RATE: 0.01
+
+model_trainer:
+  AUGMENTATION: True
+  IMAGE_SIZE: [224, 224, 3] # As per VGG 16 model
+  BATCH_SIZE: 16
+  EPOCHS: 1
