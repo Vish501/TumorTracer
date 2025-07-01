@@ -6,3 +6,7 @@ data_ingestion:
   download_zip: artifacts/data_ingestion/chest-ctscan-images.zip
   extracted_file: artifacts/data_ingestion/Data
 
+base_model:
+  root_dir: artifacts/base_model
+  model_path: artifacts/base_model/base_model.h5
+  updated_model_path: artifacts/base_model/updated_base_model.h5
