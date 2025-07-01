@@ -30,8 +30,7 @@ if __name__ == "__main__":
         logger.info(f">>>> {STAGE_NAME} stage has started <<<<")
         
         # Run the pipeline
-        ingestion_pipeline = DataIngestionTrainingPipeline()
-        ingestion_pipeline.main()
+        DataIngestionTrainingPipeline.main()
 
         logger.info(f">>>> {STAGE_NAME} stage has completed <<<<")
     
