@@ -13,19 +13,22 @@ class ConfigurationManager:
         """
         Reads configuration files (config.yaml and params.yaml), 
         ensures necessary directories exist, and prepares structured config objects.
+
+        Args:
+        - config_file_path (str): Path to the config.yaml file.
+        - params_file_path (str): Path to the params.yaml file.
         """
-        # Load both config and params YAML files into memory
-        if not Path(config_file_path):
+        # Validate and load config.yaml
+        if not Path(config_file_path).exists():
             logger.error(f"Config file not found at: {config_file_path}")
             raise FileNotFoundError(f"Config file not found at: {config_file_path}")
-        else:
-            self.config = read_yaml(config_file_path)
+        self.config = read_yaml(config_file_path)
 
-        if not Path(config_file_path):
+        # Validate and load params.yaml
+        if not Path(config_file_path).exists():
             logger.error(f"Params file not found at: {params_file_path}")
             raise FileNotFoundError(f"Params file not found at: {params_file_path}")
-        else:
-            self.params = read_yaml(params_file_path)
+        self.params = read_yaml(params_file_path)
 
         logger.info(f"Loading configuration from {config_file_path} and parameters from {params_file_path}")
 
