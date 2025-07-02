@@ -56,6 +56,7 @@ class DataIngestion:
 
         except zipfile.BadZipFile:
             logger.error(f"Invalid zip file format.")
+            raise
         
         except Exception as exception_error:
             logger.error(f"Unexpected error file unziping dataset: {exception_error}")
