@@ -8,6 +8,20 @@ logger = get_logger()
 
 
 class DataIngestion:
+    """
+    Handles the dataset ingestion step of the pipeline.
+
+    This includes:
+    - Downloading the dataset from Kaggle using the official Kaggle API
+    - Extracting the downloaded ZIP file to a specified directory
+
+    Attributes:
+    - config (DataIngestionConfig): Configuration object containing paths and dataset info
+
+    Public Methods:
+    - download_files(): Downloads the dataset zip file from Kaggle
+    - extract_files(): Extracts the zip file contents into the destination folder
+    """
     def __init__(self, config: DataIngestionConfig):
         self.config = config
 
