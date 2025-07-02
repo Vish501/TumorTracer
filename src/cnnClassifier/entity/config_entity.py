@@ -16,7 +16,8 @@ class DataIngestionConfig:
     kaggle_dataset: str     # The Kaggle dataset identifier "owner/dataset"
     download_zip: Path      # Path where the downloaded ZIP file will be saved
     extracted_file: Path    # Path where the final extracted file will be stored
-
+    rename_map_yaml: Path   # Path where the dataset renaming file is located
+    
 
 @dataclass(frozen=True)
 class BaseModelConfig:

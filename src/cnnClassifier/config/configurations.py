@@ -55,6 +55,7 @@ class ConfigurationManager:
             kaggle_dataset=config.kaggle_dataset,
             download_zip=Path(config.download_zip),
             extracted_file=Path(config.extracted_file),
+            rename_map_yaml=Path(config.rename_map_yaml)
         )
         
         logger.info(f"DataIngestionConfig created with: {ingestion_config}")

@@ -26,6 +26,7 @@ class DataIngestionTrainingPipeline:
         data_ingestor = DataIngestion(config=ingestion_config)
         data_ingestor.download_files()
         data_ingestor.extract_files()
+        data_ingestor.rename_class_folders_from_yaml()
 
 
 if __name__ == "__main__":
