@@ -2,7 +2,7 @@ from pathlib import Path
 
 from cnnClassifier.constants import CONFIG_FILE_PATH, PARAMS_FILE_PATH
 from cnnClassifier.utils.common import read_yaml, create_directories
-from cnnClassifier.entity.config_entity import DataIngestionConfig
+from cnnClassifier.entity.config_entity import DataIngestionConfig, BaseModelConfig
 from cnnClassifier import get_logger
 
 # Initializing the logger
@@ -60,3 +60,34 @@ class ConfigurationManager:
         logger.info(f"DataIngestionConfig created with: {ingestion_config}")
 
         return ingestion_config
+
+
+    def get_base_model_config(self) -> BaseModelConfig:
+        """
+        Prepares and returns the BaseModelConfig object.
+
+        Returns:
+        - BaseModelConfig: Structured config for downloading and updating base model.
+        """
+        config = self.config.base_model
+        params = self.params.base_model
+
+        # Ensure the data_ingestion directory exists
+        create_directories([config.root_dir])
+
+        # Build and return a structured configuration object for base model construction
+        training_config = BaseModelConfig(
+            root_dir=Path(config.root_dir),
+            model_path=Path(config.model_path),
+            updated_model_path=Path(config.updated_model_path),
+            params_image_size=tuple(params.IMAGE_SIZE),             # Convert list to tuple for immutability
+            params_include_top=params.INCLUDE_TOP,
+            params_classes=params.CLASSES,
+            params_weights=params.WEIGHTS,
+            params_learning_rate=params.LEARNING_RATE,
+        )
+        
+        logger.info(f"BaseModelConfig created with: {training_config}")
+
+        return training_config
+    
