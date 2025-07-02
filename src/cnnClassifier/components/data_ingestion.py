@@ -59,5 +59,5 @@ class DataIngestion:
         
         except Exception as exception_error:
             logger.error(f"Unexpected error file unziping dataset: {exception_error}")
-            raise exception_error
+            raise 
         
