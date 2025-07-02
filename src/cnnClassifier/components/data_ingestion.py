@@ -39,7 +39,7 @@ class DataIngestion:
             logger.info(f"Successfully downloaded dataset {self.config.kaggle_dataset} at: {self.config.root_dir}")
 
         except Exception as exception_error:
-            logger.error(f"Unexpected error file downloading dataset: {exception_error}")
+            logger.error(f"Unexpected error while downloading dataset: {exception_error}")
             raise exception_error
 
     def extract_files(self) -> None:
