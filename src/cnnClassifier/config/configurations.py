@@ -76,7 +76,7 @@ class ConfigurationManager:
         create_directories([config.root_dir])
 
         # Build and return a structured configuration object for base model construction
-        training_config = BaseModelConfig(
+        base_model_config = BaseModelConfig(
             root_dir=Path(config.root_dir),
             model_path=Path(config.model_path),
             updated_model_path=Path(config.updated_model_path),
@@ -87,7 +87,7 @@ class ConfigurationManager:
             params_learning_rate=params.LEARNING_RATE,
         )
         
-        logger.info(f"BaseModelConfig created with: {training_config}")
+        logger.info(f"BaseModelConfig created with: {base_model_config}")
 
-        return training_config
+        return base_model_config
     
