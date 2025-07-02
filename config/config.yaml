@@ -5,6 +5,7 @@ data_ingestion:
   kaggle_dataset: "mohamedhanyyy/chest-ctscan-images"
   download_zip: artifacts/data_ingestion/chest-ctscan-images.zip
   extracted_file: artifacts/data_ingestion/Data
+  rename_map_yaml: config/class_name_map.yaml
 
 base_model:
   root_dir: artifacts/base_model
@@ -14,3 +15,6 @@ base_model:
 model_training:
   root_dir: artifacts/model_training
   trained_model_path: artifacts/model_training/trained_model.h5
+  updated_model_path: artifacts/base_model/updated_base_model.h5
+  training_dataset: artifacts/data_ingestion/Data/train
+  validation_dataset: artifacts/data_ingestion/Data/valid
