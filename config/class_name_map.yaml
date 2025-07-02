@@ -1,0 +1,18 @@
+train:
+  adenocarcinoma_left.lower.lobe_T2_N0_M0_Ib: adenocarcinoma
+  large.cell.carcinoma_left.hilum_T2_N2_M0_IIIa: large_cell_carcinoma
+  squamous.cell.carcinoma_left.hilum_T1_N2_M0_IIIa: squamous_cell_carcinoma
+  normal: normal
+
+valid:
+  adenocarcinoma_left.lower.lobe_T2_N0_M0_Ib: adenocarcinoma
+  large.cell.carcinoma_left.hilum_T2_N2_M0_IIIa: large_cell_carcinoma
+  squamous.cell.carcinoma_left.hilum_T1_N2_M0_IIIa: squamous_cell_carcinoma
+  normal: normal
+
+test:
+  adenocarcinoma: adenocarcinoma
+  large.cell.carcinoma: large_cell_carcinoma
+  squamous.cell.carcinoma: squamous_cell_carcinoma
+  normal: normal
+  
