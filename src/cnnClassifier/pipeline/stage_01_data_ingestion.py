@@ -36,6 +36,6 @@ if __name__ == "__main__":
     
     except Exception as exception:
         # Catch and log any unexpected errors during the ingestion stage
-        logger.exception(f"Unexpected error during data ingestion pipeline: {exception}")
+        logger.exception(f"Unexpected error during {STAGE_NAME} pipeline: {exception}")
         raise exception
     
