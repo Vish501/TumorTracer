@@ -27,5 +27,3 @@ if __name__ == "__main__":
         # Catch and log any unexpected errors during the ingestion stage
         logger.exception(f"Unexpected error during {STAGE_NAME} pipeline: {exception}")
         raise exception
-    
-    
