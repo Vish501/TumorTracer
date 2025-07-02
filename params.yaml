@@ -5,7 +5,7 @@ base_model:
   WEIGHTS: imagenet
   LEARNING_RATE: 0.01
 
-model_trainer:
+model_training:
   AUGMENTATION: True
   IMAGE_SIZE: [224, 224, 3] # As per VGG 16 model
   BATCH_SIZE: 16
