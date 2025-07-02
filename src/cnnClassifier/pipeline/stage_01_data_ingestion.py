@@ -1,5 +1,6 @@
 from cnnClassifier.config.configurations import ConfigurationManager
 from cnnClassifier.components.data_ingestion import DataIngestion
+from cnnClassifier.utils.kaggle_auth import setup_kaggle_auth_from_secret
 from cnnClassifier import get_logger
 
 # Initializing the logger
@@ -17,6 +18,8 @@ class DataIngestionTrainingPipeline:
     """
     @staticmethod
     def main():
+        setup_kaggle_auth_from_secret(secret_env_var="KAGGLE_JSON")
+
         config_manager = ConfigurationManager()
         ingestion_config = config_manager.get_ingestion_config()
 
