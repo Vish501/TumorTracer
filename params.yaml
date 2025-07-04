@@ -11,6 +11,7 @@ model_training:
   BATCH_SIZE: 16
   EPOCHS: 4
   LEARNING_RATE: 0.01
+  CHECKPOINT: True
   AUGMENTATION_PARAMS:
     rotation_range: 15
     width_shift_range: 0.1
