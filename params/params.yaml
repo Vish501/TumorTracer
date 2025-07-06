@@ -13,6 +13,7 @@ model_training:
   LEARNING_RATE: 0.01
   OPTIMIZER: "Adam"
   CHECKPOINT: True
+  MLFLOW_TRACKING: True
   AUGMENTATION_PARAMS:
     rotation_range: 15
     width_shift_range: 0.1
