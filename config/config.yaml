@@ -18,3 +18,6 @@ model_training:
   updated_model_path: artifacts/base_model/updated_base_model.h5
   training_dataset: artifacts/data_ingestion/Data/train
   validation_dataset: artifacts/data_ingestion/Data/valid
+
+hyperparameter_search:
+  root_dir: artifacts/hyperparameter_search
