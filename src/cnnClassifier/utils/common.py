@@ -493,3 +493,17 @@ def encode_image_Base64(path: Union[str, Path]) -> str:
         logger.error(f"Unexpected error while encoding image at {path}: {exception_error}")
         raise exception_error
     
+    
+def convert_paths_to_str(obj: dict) -> dict:
+    """
+    Recursively convert Path objects in a nested dictionary to strings.
+    """
+    output = {}
+    for key, value in obj.items():
+        if isinstance(value, Path):
+            output[key] = str(value)
+        elif isinstance(value, dict):
+            output[key] = convert_paths_to_str(value)
+        else:
+            output[key] = value
+    return output
