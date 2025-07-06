@@ -2,7 +2,7 @@ from pathlib import Path
 
 from cnnClassifier.constants import CONFIG_FILE_PATH, PARAMS_FILE_PATH
 from cnnClassifier.utils.common import read_yaml, create_directories
-from cnnClassifier.entity.config_entity import DataIngestionConfig, BaseModelConfig
+from cnnClassifier.entity.config_entity import DataIngestionConfig, BaseModelConfig, ModelTrainingConfig
 from cnnClassifier import get_logger
 
 # Initializing the logger
@@ -91,4 +91,43 @@ class ConfigurationManager:
         logger.info(f"BaseModelConfig created with: {base_model_config}")
 
         return base_model_config
+    
+    
+    def get_training_config(self) -> ModelTrainingConfig:
+        """
+        Prepares and returns the ModelTrainingConfig object.
+
+        Returns:
+        - ModelTrainingConfig: Structured config for training the updated base model.
+        """
+        training_config = self.config.model_training
+        training_params = self.params.model_training
+
+        # Ensure the data_ingestion directory exists
+        create_directories([training_config.root_dir])
+
+        # Load augmentation params only if augmentation is enabled and params for it are present
+        params_for_augmentation = {}
+        if training_params.AUGMENTATION and hasattr(training_params, "AUGMENTATION_PARAMS"):
+            params_for_augmentation = dict(training_params.AUGMENTATION_PARAMS )
+
+        training_config = ModelTrainingConfig(
+            root_dir=Path(training_config.root_dir),
+            trained_model_path=Path(training_config.trained_model_path),
+            updated_base_model=Path(training_config.updated_model_path),
+            training_data=Path(training_config.training_dataset),
+            validation_data=Path(training_config.validation_dataset),
+            params_augmentation=training_params.AUGMENTATION,
+            params_checkpoint=training_params.CHECKPOINT,
+            params_image_size=tuple(training_params.IMAGE_SIZE),
+            params_batch_size=training_params.BATCH_SIZE,
+            params_epochs=training_params.EPOCHS,
+            params_optimizer=training_params.OPTIMIZER,
+            params_learning_rate=training_params.LEARNING_RATE,
+            params_if_augmentation=params_for_augmentation,
+        )
+
+        logger.info(f"ModelTrainingConfig created with: {training_config}")
+
+        return training_config
     
