@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 from cnnClassifier import get_logger
+from typing import Optional, Dict, Any
 
 # Initializing the logger
 logger = get_logger()
@@ -33,3 +34,24 @@ class BaseModelConfig:
     params_classes: int                         # Number of output classes
     params_weights: str                         # Pre-trained weights source
     params_learning_rate: float                 # Learning rate for training
+
+
+@dataclass(frozen=True)
+class ModelTrainingConfig:
+    """
+    Immutable configuration class to store all parameters 
+    and paths required for model training. 
+    """
+    root_dir: Path                                          # Directory for training artifacts
+    trained_model_path: Path                                # Final model output path
+    updated_base_model: Path                                # Pretrained model with custom head
+    training_data: Path                                     # Directory with training images
+    validation_data: Path                                   # Directory with validation images
+    params_augmentation: bool                               # Whether to apply augmentation
+    params_checkpoint: bool                                 # Whether created models need to be checkpointed
+    params_image_size: tuple[int, int, int]                 # Input image size, e.g., [224, 224, 3]
+    params_batch_size: int                                  # Batch size for training
+    params_epochs: int                                      # Total epochs
+    params_optimizer: str                                   # Optimizer to be used when recompling model
+    params_learning_rate: float                             # Learning rate for training
+    params_if_augmentation: Optional[Dict[str, Any]] = None # Dict of augmentation hyperparameters
