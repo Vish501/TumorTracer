@@ -205,7 +205,9 @@ class ModelTraining:
             self.validation_images = self._count_images_in_directory(self.config.validation_data)
 
             # Initializing the custom callback from tf.Keras
-            custom_callback = CustomCheckpointCallback(save_directory=self.checkpoint_path, model_to_save=self.output_model)
+            custom_callback = []
+            if self.config.params_checkpoint:
+                custom_callback.append(CustomCheckpointCallback(save_directory=self.checkpoint_path, model_to_save=self.output_model))
 
             # Fitting the model
             total_epochs = self.config.params_epochs + self.additional_epochs
