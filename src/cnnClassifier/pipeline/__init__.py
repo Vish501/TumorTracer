@@ -1,2 +1,3 @@
 from .stage_01_data_ingestion import DataIngestionTrainingPipeline
 from .stage_02_base_model import BaseModelPipeline
+from .stage_03_model_training import ModelTrainingPipeline
