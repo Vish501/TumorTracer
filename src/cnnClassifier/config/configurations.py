@@ -119,6 +119,7 @@ class ConfigurationManager:
             validation_data=Path(training_config.validation_dataset),
             params_augmentation=training_params.AUGMENTATION,
             params_checkpoint=training_params.CHECKPOINT,
+            params_mlflow=training_params.MLFLOW_TRACKING,
             params_image_size=tuple(training_params.IMAGE_SIZE),
             params_batch_size=training_params.BATCH_SIZE,
             params_epochs=training_params.EPOCHS,
