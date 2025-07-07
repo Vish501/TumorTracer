@@ -4,6 +4,7 @@ import numpy as np
 import tensorflow as tf
 import dagshub
 import mlflow
+import time
 
 from math import ceil
 from typing import Optional, Union
@@ -116,7 +117,12 @@ class MLflowCallback(Callback):
                     flatten_config_dict[key] = value
 
             # Saving all the parameters
-            mlflow.log_dict(flatten_config_dict, "params_used.json")
+            for key, value in flatten_config_dict.items():
+                try:
+                    mlflow.log_param(key, value)
+                    time.sleep(0.2)  # Wait 200ms between requests
+                except Exception as exception_error:
+                    logger.warning(f"Failed to log param {key}: {exception_error}")
 
             # Saving checkpoint path
             mlflow.log_param("Checkpoint Path", str(self.checkpoint_path))
@@ -228,6 +234,9 @@ class ModelTraining:
                 mlflow.end_run()
 
             if self.config.params_mlflow:
+                # Initalizing Dagshub
+                dagshub.init(repo_owner="Vish501", repo_name="TumorTracer", mlflow=True)
+
                 # Start a named MLflow run
                 mlflow.start_run()
                 mlflow.set_tag("mlflow.runName",f"Run_{str(self.curr_time)}")
@@ -454,7 +463,6 @@ class ModelTraining:
         # Add MLflow callback if enabled in config
         try:
             if self.config.params_mlflow:
-                dagshub.init(repo_owner="Vish501", repo_name="TumorTracer", mlflow=True)
                 custom_callback.append(MLflowCallback(config=self.config, checkpoint_path=self.checkpoint_path))
 
         except Exception as exception_error:
