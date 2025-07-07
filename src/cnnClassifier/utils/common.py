@@ -35,7 +35,7 @@ def save_tf_model(save_path: Path, model: tf.keras.Model) -> None:
         create_directories([save_path.parent])
 
         # Save model
-        model.save(save_path)
+        model.save(save_path, save_format="keras")
         logger.info(f"Model saved at: {save_path}")
 
     except ValueError as exception_error:
