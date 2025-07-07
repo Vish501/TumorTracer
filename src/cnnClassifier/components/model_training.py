@@ -2,22 +2,25 @@ import os
 import random
 import numpy as np
 import tensorflow as tf
+import dagshub
+import mlflow
+
 from math import ceil
-from typing import Union
+from typing import Optional, Union
 from tensorflow.keras.preprocessing.image import ImageDataGenerator, DirectoryIterator # type: ignore
 from tensorflow.keras.callbacks import Callback # type: ignore
 from pathlib import Path
 from dataclasses import asdict
 from datetime import datetime
 
-from cnnClassifier.utils.common import create_directories, save_json, save_tf_model
-from cnnClassifier.entity.config_entity import ModelTrainingConfig
+from cnnClassifier.utils.common import create_directories, save_json, save_tf_model, convert_paths_to_str
+from cnnClassifier.config.configurations import ModelTrainingConfig
 from cnnClassifier import get_logger
 
 # Initializing the logger
 logger = get_logger()
 
-class CustomCheckpointCallback(Callback):
+class CheckpointCallback(Callback):
     """
     A custom Keras callback that saves the model whenever the validation accuracy improves.
     The model file name includes the epoch number, training accuracy, and validation accuracy.
@@ -75,16 +78,89 @@ class CustomCheckpointCallback(Callback):
             logger.info(f"Saved new best model at {model_path}")
 
 
+class MLflowCallback(Callback):
+    """
+    A custom Keras callback that saves the model whenever the validation accuracy improves.
+    The model file name includes the epoch number, training accuracy, and validation accuracy.
+    """
+    def __init__(self, config: Optional[dict] = None, checkpoint_path: Path = None) -> None:
+        """
+        Initializes the callback with directory and model reference.
+        """
+        super().__init__()
+        self.config = config
+        self.checkpoint_path = checkpoint_path
+
+
+    def on_train_begin(self, logs: Optional[dict] = None) -> None:
+        """
+        Called at the beginning of training.
+        Logs all the parameters to MLflow.
+        """
+        try:
+            if not mlflow.active_run():
+                logger.error(f"Unable to find an active MLFlow run.")
+                raise ValueError(f"Unable to find an active MLFlow run.")
+
+            # Flattening config as MLFlow only accepts ints, strs, floats, and such
+            config_dict = convert_paths_to_str(asdict(self.config))
+            flatten_config_dict = {}
+
+            for key, value in config_dict.items():
+                if isinstance(value, dict):
+                    for sub_key, sub_value in value.items():
+                        flatten_config_dict[f"{key}.{sub_key}"] = sub_value
+                elif isinstance(value, list):
+                    flatten_config_dict[key] = str(value)
+                else:
+                    flatten_config_dict[key] = value
+
+            for key, value in flatten_config_dict.items():
+                mlflow.log_param(key, value)
+
+            # Saving checkpoint path
+            mlflow.log_param("Checkpoint Path", str(self.checkpoint_path))
+
+        except Exception as exception_error:
+            logger.error(f"Unexpected error while logging params in MLflow: {exception_error}")
+
+
+    def on_epoch_end(self, epoch: int, logs: dict[str, float] = None) -> None:
+        """
+        Called at the end of each epoch.
+        Logs the accuracy metrics and saves the model if val_accuracy improves.
+        """
+        try:
+            if not logs:
+                logger.warning(f"Logs not found. Skipping model save to MLflow.")
+                return
+            
+            # Registering epoch id as a metric
+            mlflow.log_metric("epoch", epoch + 1, step=epoch)
+
+            # Logging all metrics
+            for key, value in logs.items():
+                mlflow.log_metric(key, value, step=epoch)
+
+        except Exception as exception_error:
+            logger.error(f"Unexpected error while logging metrics in MLflow: {exception_error}")
+
+
 class ModelTraining:
     """
     Initializes training pipeline with given configuration.
 
+    This class encapsulates all core components required to train, validate, checkpoint,
+    and manage a deep learning model for image classification tasks. It is designed to
+    integrate seamlessly with MLflow (via DagsHub) and DVC for experiment tracking and
+    data version control.
+
     Core Responsibilities:
-    - Load a pre-defined base model from disk and recompile it with a fresh optimizer.
-    - Set up data generators for training and validation, with optional augmentation.
-    - Train the model across multiple epochs with optional checkpointing.
-    - Resume training from where it left off.
-    - Save class label mappings and model artifacts.
+    - Loads a pre-trained base model and recompiles it with a fresh optimizer.
+    - Configures and builds training and validation data generators using Keras' ImageDataGenerator.
+    - Manages training across multiple epochs with support for checkpointing and resuming.
+    - Logs training progress and parameters via MLflow.
+    - Saves class-to-index mappings and model artifacts for reproducibility.
 
     Public Methods:
     - get_base_model(): Load and compile the pre-trained base model.
@@ -95,9 +171,18 @@ class ModelTraining:
 
     Private Utilities:
     - _build_generator(): Helper to construct data generators with standard settings.
+    - _get_callbacks(): Constructs and returns a list of Keras-compatible callbacks based on config settings.
     - _create_checkpoint(): Creates a checkpoint directory and stores training metadata.
     - _get_optimizer(): Returns optimizer based on config.
     - _count_images_in_directory(): Utility to count image files recursively.
+
+    Usage (if using MLFlow):
+    ------
+        with ModelTraining(config) as trainer:
+            trainer.get_base_model()
+            trainer.get_data_generators()
+            trainer.train()
+            trainer.save_class_indices()
     """
     def __init__(self, config: ModelTrainingConfig) -> None:
         """
@@ -126,9 +211,48 @@ class ModelTraining:
         self.best_val_accuracy = 0
 
         # Initialize checkpoint directory path with timestamp
-        curr_time = datetime.now().strftime("%Y%m%d_%H%M")
-        self.checkpoint_path = Path(self.config.root_dir / f"Checkpoint_{curr_time}")
+        self.curr_time = datetime.now().strftime("%Y%m%d_%H%M")
+        self.checkpoint_path = Path(self.config.root_dir / f"Checkpoint_{self.curr_time}")
 
+
+    def __enter__(self) -> "ModelTraining":
+        """
+        Called when entering the 'with' block.
+        Starts an MLflow run if enabled in config.
+
+        Returns:
+        - self: The instance of ModelTraining.
+        """
+        try:
+            if mlflow.active_run():
+                mlflow.end_run()
+
+            if self.config.params_mlflow:
+                # Start a named MLflow run
+                mlflow.start_run()
+                mlflow.set_tag("mlflow.runName",f"Run_{str(self.curr_time)}")
+                logger.info(f"Initializing MLflow run")
+
+        except Exception as exception_error:
+            logger.error(f"Unexpected error while setting up MLFlow: {exception_error}")
+            raise
+        
+        return self
+
+
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
+        """
+        Called when exiting the 'with' block.
+        Ends the MLflow run if active.
+        """
+        try:
+            if mlflow.active_run():
+                mlflow.end_run()
+
+        except Exception as exception_error:
+            logger.error(f"Unexpected error while stopping MLflow: {exception_error}")
+            raise
+ 
 
     def get_base_model(self) -> None:
         """
@@ -196,7 +320,7 @@ class ModelTraining:
         
         if (self.config.params_checkpoint) and (not self.checkpoint_path.exists()) and (self.config.params_epochs >= 1):
             self._create_checkpoint()
-        
+
         try:
             logger.info("Initializing model training...")
 
@@ -205,9 +329,7 @@ class ModelTraining:
             self.validation_images = self._count_images_in_directory(self.config.validation_data)
 
             # Initializing the custom callback from tf.Keras
-            custom_callback = []
-            if self.config.params_checkpoint:
-                custom_callback.append(CustomCheckpointCallback(save_directory=self.checkpoint_path, model_to_save=self.output_model))
+            custom_callback = self._get_callbacks()
 
             # Fitting the model
             total_epochs = self.config.params_epochs + self.additional_epochs
@@ -306,6 +428,39 @@ class ModelTraining:
             raise
     
 
+    def _get_callbacks(self) -> list[Callback]:
+        """
+        Constructs and returns a list of Keras-compatible callbacks based on config settings.
+
+        Returns:
+            List[Callback]: A list of callbacks to be used during model training.
+
+        Handles:
+        - Checkpointing the model if 'params_checkpoint' is True.
+        - Logging to MLflow via DagsHub if 'params_mlflow' is True.
+        """
+        custom_callback = []
+
+        # Add checkpoint callback if enabled in config
+        try:
+            if self.config.params_checkpoint:
+                custom_callback.append(CheckpointCallback(save_directory=self.checkpoint_path, model_to_save=self.output_model))
+        
+        except Exception as exception_error:
+            logger.error(f"Unexpected error while loading the checkpoint callback: {exception_error}")
+
+        # Add MLflow callback if enabled in config
+        try:
+            if self.config.params_mlflow:
+                dagshub.init(repo_owner="Vish501", repo_name="TumorTracer", mlflow=True)
+                custom_callback.append(MLflowCallback(config=self.config, checkpoint_path=self.checkpoint_path))
+
+        except Exception as exception_error:
+            logger.error(f"Unexpected error while loading the MLflow callback: {exception_error}")                
+
+        return custom_callback
+
+
     def _create_checkpoint(self) -> None:
         """
         Creates a checkpoint directory and saves the training configuration as a JSON file.
@@ -322,7 +477,7 @@ class ModelTraining:
             create_directories([self.checkpoint_path])
 
             # Convert all Path objects to str recursively
-            config_dict = self._convert_paths_to_str(asdict(self.config))
+            config_dict = convert_paths_to_str(asdict(self.config))
 
             save_json(save_path=save_path, data=config_dict)
             
@@ -399,20 +554,3 @@ class ModelTraining:
         except Exception as exception_error:
             logger.error(f"Unexpected error while counting images in directory: {exception_error}")
             raise
-
-    
-    @staticmethod
-    def _convert_paths_to_str(obj: dict) -> dict:
-        """
-        Recursively convert Path objects in a nested dictionary to strings.
-        """
-        output = {}
-        for key, value in obj.items():
-            if isinstance(value, Path):
-                output[key] = str(value)
-            elif isinstance(value, dict):
-                output[key] = ModelTraining._convert_paths_to_str(value)
-            else:
-                output[key] = value
-        return output
-    
