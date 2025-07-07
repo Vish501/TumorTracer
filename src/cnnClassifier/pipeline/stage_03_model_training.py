@@ -17,11 +17,12 @@ class ModelTrainingPipeline:
         config_manager = ConfigurationManager()
         training_config = config_manager.get_training_config()
 
-        training_constructor = ModelTraining(config=training_config)
-        training_constructor.get_base_model()
-        training_constructor.get_data_generators()
-        training_constructor.train()
-        training_constructor.save_class_indices()
+        with ModelTraining(config=training_config) as training_constructor:
+            training_constructor.get_base_model()
+            training_constructor.get_data_generators()
+            training_constructor.train()
+            training_constructor.save_class_indices()
+            training_constructor.resume_train(add_epochs=2)
 
 
 if __name__ == "__main__":
