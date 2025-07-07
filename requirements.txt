@@ -1,9 +1,10 @@
 # === Core ML stack ===
 mlflow==2.12.1                # Model tracking & deployment
 pyarrow==14.0.2               # Data serialization, compatible with MLflow
+dagshub==0.5.10               # MLflow backend integration
 
 # === Deep Learning ===
-tensorflow==2.16.1            # Deep learning framework
+tensorflow==2.16.1            # Deep learning framework (Keras included)
 
 # === Data Science Essentials ===
 numpy==1.26.4                 # Numerical computing
@@ -13,11 +14,10 @@ matplotlib==3.10.3            # Plotting and visualization
 seaborn==0.13.2               # Statistical data visualization
 tqdm==4.67.1                  # Progress bars
 
-# === Data Science Essentials ===
-kaggle=1.7.4.5                # Loading dataset
+# === Dataset ===
+kaggle==1.7.4.5                # Downloading datasets from Kaggle
 
 # === Dev Tools & Utilities ===
-dagshub=3.3.1                 # For Mlflow
 dotenv==1.1.1                 # Environment variables
 dvc==3.60.1                   # Data version control
 joblib==1.5.1                 # Parallel processing
@@ -31,7 +31,15 @@ types-PyYAML==6.0.12.20250516 # Type stubs for PyYAML
 ipykernel==6.29.5             # Jupyter kernel
 notebook==7.4.3               # Jupyter Notebook UI
 Flask==3.1.1                  # Web framework
-Flask-Cors==6.0.1             # CORS support for Flask
+Flask-Cors==6.0.1             # Cross-origin support (CORS) for Flask
+
+# Compatibility & Utilities
+click==8.2.1                  # MLflow CLI dependencies
+packaging==24.2               # Version parsing (MLflow)
+protobuf==4.25.8              # TF/MLflow compatible version
+requests==2.32.3              # Used internally by MLflow
+setuptools==80.9.0            # Required for editable installs
+wheel==0.45.1                 # Building wheels
 
 # === Local Development ===
 -e .
