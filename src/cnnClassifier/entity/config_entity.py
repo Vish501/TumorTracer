@@ -49,6 +49,7 @@ class ModelTrainingConfig:
     validation_data: Path                                   # Directory with validation images
     params_augmentation: bool                               # Whether to apply augmentation
     params_checkpoint: bool                                 # Whether created models need to be checkpointed
+    params_mlflow: bool                                     # Whether models need to be tracker in mlflow
     params_image_size: tuple[int, int, int]                 # Input image size, e.g., [224, 224, 3]
     params_batch_size: int                                  # Batch size for training
     params_epochs: int                                      # Total epochs
