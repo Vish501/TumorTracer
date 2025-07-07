@@ -13,7 +13,7 @@ stages:
       - src/cnnClassifier/pipeline/stage_02_base_model.py
       - config/config.yaml
     params:
-      - params/params.yaml
+      - params/params.yaml:
           - base_model.IMAGE_SIZE
           - base_model.INCLUDE_TOP
           - base_model.CLASSES
@@ -30,7 +30,7 @@ stages:
       - artifacts/base_model/updated_base_model.h5
       - config/config.yaml
     params:
-      - params/params.yaml
+      - params/params.yaml:
           - model_training.AUGMENTATION
           - model_training.IMAGE_SIZE
           - model_training.BATCH_SIZE
@@ -47,4 +47,4 @@ stages:
           - model_training.AUGMENTATION_PARAMS.horizontal_flip
           - model_training.AUGMENTATION_PARAMS.fill_mode
     outs:
-      - artifacts/model_training
+      - artifacts/model_training/
