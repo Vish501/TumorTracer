@@ -4,7 +4,7 @@ stages:
     deps:
       - src/cnnClassifier/pipeline/stage_01_data_ingestion.py
       - config/config.yaml
-    output:
+    outs:
       - artifacts/data_ingestion/Data
 
   base_model:
@@ -12,13 +12,39 @@ stages:
     deps:
       - src/cnnClassifier/pipeline/stage_02_base_model.py
       - config/config.yaml
-      - params/params.yaml
     params:
-      - IMAGE_SIZE
-      - INCLUDE_TOP
-      - CLASSES
-      - WEIGHTS
-      - LEARNING_RATE
-    output:
-      - artifacts/base_model
-      
+      - params/params.yaml
+          - base_model.IMAGE_SIZE
+          - base_model.INCLUDE_TOP
+          - base_model.CLASSES
+          - base_model.WEIGHTS
+          - base_model.LEARNING_RATE
+    outs:
+      - artifacts/base_model/updated_base_model.h5
+    
+  model_training:
+    cmd: python src/cnnClassifier/pipeline/stage_03_model_training.py
+    deps:
+      - src/cnnClassifier/pipeline/stage_03_model_training.py
+      - artifacts/data_ingestion/Data
+      - artifacts/base_model/updated_base_model.h5
+      - config/config.yaml
+    params:
+      - params/params.yaml
+          - model_training.AUGMENTATION
+          - model_training.IMAGE_SIZE
+          - model_training.BATCH_SIZE
+          - model_training.EPOCHS
+          - model_training.LEARNING_RATE
+          - model_training.OPTIMIZER
+          - model_training.CHECKPOINT
+          - model_training.MLFLOW_TRACKING
+          - model_training.AUGMENTATION_PARAMS.rotation_range
+          - model_training.AUGMENTATION_PARAMS.width_shift_range
+          - model_training.AUGMENTATION_PARAMS.height_shift_range
+          - model_training.AUGMENTATION_PARAMS.shear_range
+          - model_training.AUGMENTATION_PARAMS.zoom_range
+          - model_training.AUGMENTATION_PARAMS.horizontal_flip
+          - model_training.AUGMENTATION_PARAMS.fill_mode
+    outs:
+      - artifacts/model_training
