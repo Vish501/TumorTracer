@@ -115,8 +115,8 @@ class MLflowCallback(Callback):
                 else:
                     flatten_config_dict[key] = value
 
-            for key, value in flatten_config_dict.items():
-                mlflow.log_param(key, value)
+            # Saving all the parameters
+            mlflow.log_dict(flatten_config_dict, "params_used.json")
 
             # Saving checkpoint path
             mlflow.log_param("Checkpoint Path", str(self.checkpoint_path))
@@ -347,9 +347,11 @@ class ModelTraining:
     
             # Updating number of epochs completed for resume train
             self.last_epoch = total_epochs
-
+            
             logger.info("Successfully trained model based on provided parameters.")
-            save_tf_model(save_path=self.config.trained_model_path, model=self.output_model)
+
+            save_path = Path(self.config.trained_model_path / f"trained_model_{self.curr_time}.h5")
+            save_tf_model(save_path=save_path, model=self.output_model)
 
         except Exception as exception_error:
             logger.error(f"Unexpected error while training the model: {exception_error}")

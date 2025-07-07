@@ -22,7 +22,7 @@ class ModelTrainingPipeline:
             training_constructor.get_data_generators()
             training_constructor.train()
             training_constructor.save_class_indices()
-            training_constructor.resume_train(add_epochs=2)
+            # training_constructor.resume_train(add_epochs=2)
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ base_model:
 
 model_training:
   root_dir: artifacts/model_training
-  trained_model_path: artifacts/model_training/trained_model.h5
+  trained_model_path: artifacts/model_training
   updated_model_path: artifacts/base_model/updated_base_model.h5
   training_dataset: artifacts/data_ingestion/Data/train
   validation_dataset: artifacts/data_ingestion/Data/valid
