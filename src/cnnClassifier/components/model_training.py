@@ -4,7 +4,6 @@ import numpy as np
 import tensorflow as tf
 import dagshub
 import mlflow
-import time
 
 from math import ceil
 from typing import Optional, Union
@@ -120,7 +119,6 @@ class MLflowCallback(Callback):
             for key, value in flatten_config_dict.items():
                 try:
                     mlflow.log_param(key, value)
-                    time.sleep(0.2)  # Wait 200ms between requests
                 except Exception as exception_error:
                     logger.warning(f"Failed to log param {key}: {exception_error}")
 
