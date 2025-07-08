@@ -20,14 +20,14 @@ stages:
           - base_model.WEIGHTS
           - base_model.LEARNING_RATE
     outs:
-      - artifacts/base_model/updated_base_model.h5
+      - artifacts/base_model/updated_base_model.keras
     
   model_training:
     cmd: python src/cnnClassifier/pipeline/stage_03_model_training.py
     deps:
       - src/cnnClassifier/pipeline/stage_03_model_training.py
       - artifacts/data_ingestion/Data
-      - artifacts/base_model/updated_base_model.h5
+      - artifacts/base_model/updated_base_model.keras
       - config/config.yaml
     params:
       - params/params.yaml:
