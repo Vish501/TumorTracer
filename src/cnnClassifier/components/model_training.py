@@ -71,7 +71,7 @@ class CheckpointCallback(Callback):
             self.best_val_accuracy = val_acc
 
             # Construct model filename with padded epoch, train_acc, and val_acc
-            model_path = Path(self.save_directory / f"model_e{epoch+1:02d}_acc{train_acc:.4f}_vacc{val_acc:.4f}.h5")
+            model_path = Path(self.save_directory / f"model_e{epoch+1:02d}_acc{train_acc:.4f}_vacc{val_acc:.4f}.keras")
 
             # Save the model to disk
             save_tf_model(save_path=model_path, model=self.model_to_save)
@@ -357,7 +357,7 @@ class ModelTraining:
             
             logger.info("Successfully trained model based on provided parameters.")
 
-            save_path = Path(self.config.trained_model_path / f"trained_model_{self.curr_time}.h5")
+            save_path = Path(self.config.trained_model_path / f"trained_model_{self.curr_time}.keras")
             save_tf_model(save_path=save_path, model=self.output_model)
 
         except Exception as exception_error:
