@@ -2,7 +2,7 @@ from pathlib import Path
 
 from cnnClassifier.constants import CONFIG_FILE_PATH, PARAMS_FILE_PATH
 from cnnClassifier.utils.common import read_yaml, create_directories
-from cnnClassifier.entity.config_entity import DataIngestionConfig, BaseModelConfig, ModelTrainingConfig
+from cnnClassifier.entity.config_entity import DataIngestionConfig, BaseModelConfig, ModelTrainingConfig, PredictionConfig
 from cnnClassifier import get_logger
 
 # Initializing the logger
@@ -131,4 +131,25 @@ class ConfigurationManager:
         logger.info(f"ModelTrainingConfig created with: {training_config}")
 
         return training_config
+
+
+    def get_prediction_config(self) -> PredictionConfig:
+        """
+        Prepares and returns the PredictionConfig object.
+
+        Returns:
+        - PredictionConfig: Structured config for predicting using trained model
+        """
+        config = self.config.predictions
+        params = self.params.predictions
+
+        predictions_config = PredictionConfig(
+            traied_model_path=Path(config.model),
+            class_indices_path=Path(config.class_indices),
+            params_image_size=tuple(params.IMAGE_SIZE),
+        )
+
+        logger.info(f"PredictionConfig created with: {predictions_config}")
+
+        return predictions_config
     

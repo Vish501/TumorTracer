@@ -56,3 +56,14 @@ class ModelTrainingConfig:
     params_optimizer: str                                   # Optimizer to be used when recompling model
     params_learning_rate: float                             # Learning rate for training
     params_if_augmentation: Optional[Dict[str, Any]] = None # Dict of augmentation hyperparameters
+
+
+@dataclass(frozen=True)
+class PredictionConfig:
+    """
+    Immutable configuration class to store all parameters 
+    and paths required for model prediction. 
+    """
+    traied_model_path: Path                     # Path to the trained model that will be used to predict
+    class_indices_path: Path                    # Path to the model's class_indices
+    params_image_size: tuple[int, int, int]     # Input image size, e.g., [224, 224, 3]
