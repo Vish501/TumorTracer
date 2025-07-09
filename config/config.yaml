@@ -21,3 +21,7 @@ model_training:
 
 hyperparameter_search:
   root_dir: artifacts/hyperparameter_search
+
+predictions:
+  model: artifacts/model_training/trained_model_20250708_0949.keras
+  class_indices: artifacts/model_training/class_indices.json
