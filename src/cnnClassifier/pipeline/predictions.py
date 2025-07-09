@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from cnnClassifier.config.configurations import ConfigurationManager
 from cnnClassifier.components.predictions import Predictions
 from cnnClassifier import get_logger
@@ -16,7 +18,7 @@ class PredictionPipeline:
     - Extract dataset contents
     """
     @staticmethod
-    def main(image_path):
+    def main(image_path: Path):
         config_manager = ConfigurationManager()
         prediction_config = config_manager.get_prediction_config()
 
