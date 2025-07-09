@@ -131,7 +131,7 @@ class ConfigurationManager:
         logger.info(f"ModelTrainingConfig created with: {training_config}")
 
         return training_config
-
+    
 
     def get_prediction_config(self) -> PredictionConfig:
         """
@@ -144,9 +144,10 @@ class ConfigurationManager:
         params = self.params.predictions
 
         predictions_config = PredictionConfig(
-            traied_model_path=Path(config.model),
+            trained_model_path=Path(config.model),
             class_indices_path=Path(config.class_indices),
             params_image_size=tuple(params.IMAGE_SIZE),
+            params_normalization=params.NORMALIZATION,
         )
 
         logger.info(f"PredictionConfig created with: {predictions_config}")
