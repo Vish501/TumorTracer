@@ -12,18 +12,16 @@ STAGE_NAME = "Prediction"
 
 class PredictionPipeline:
     """
-    Pipeline class to orchestrate the data ingestion process:
-    - Load configuration
-    - Download dataset from Kaggle
-    - Extract dataset contents
+    Pipeline class to predict.
     """
-    @staticmethod
-    def main(image_path: Path):
+    def __init___(self):
         config_manager = ConfigurationManager()
         prediction_config = config_manager.get_prediction_config()
+        self.prediction_constructor = Predictions(config=prediction_config)
 
-        prediction_constructor = Predictions(config=prediction_config)
-        prediction_constructor.predict(image_path=image_path)
+
+    def predict(self, image_path: Path):
+        self.prediction_constructor.predict(image_path=image_path)
 
 
 if __name__ == "__main__":
@@ -31,7 +29,8 @@ if __name__ == "__main__":
         logger.info(f">>>> {STAGE_NAME} stage has started <<<<")
         
         # Run the pipeline
-        PredictionPipeline.main(image_path="artifacts/data_ingestion/Data/train/normal/2 - Copy - Copy.png")
+        Predictions = PredictionPipeline()
+        Predictions.main(image_path="artifacts/data_ingestion/Data/train/normal/2 - Copy - Copy.png")
 
         logger.info(f">>>> {STAGE_NAME} stage has completed <<<<")
     
