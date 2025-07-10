@@ -30,4 +30,3 @@ predictions:
 best_model:
   source_dir: artifacts/model_training
   destination_dir: model
-
