@@ -65,7 +65,7 @@ def predict_route():
     
     # Unique filepath
     unique_id = uuid.uuid4().hex
-    image_path = Path(f"{ClientApplication.directory_path}/{unique_id}.png")
+    image_path = Path(client_application.directory_path) / f"/{unique_id}.png"
 
     try:
         # Save decoded image to file
@@ -74,7 +74,10 @@ def predict_route():
         # Predict class
         prediction_label, confidence = client_application.classifier.predict_with_confidence(image_path=image_path)
 
-        return jsonify({"prediction": prediction_label, "confidence": f"{confidence* 100:.4f}%"})
+        return jsonify({
+            "prediction": prediction_label,
+            "confidence": f"{confidence* 100:.4f}%"
+            })
     
     except Exception as exception_error:
         logger.error(f"Unexpected prediction error: {exception_error}")
