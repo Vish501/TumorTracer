@@ -1,11 +1,11 @@
 import os
+import subprocess
+import uuid
 
 from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from pathlib import Path
 
-from cnnClassifier.config.configurations import ConfigurationManager
-from cnnClassifier.components.predictions import Predictions
 from cnnClassifier.pipeline import PredictionPipeline
 from cnnClassifier.utils.common import decode_image_Base64, create_directories
 
@@ -27,12 +27,12 @@ class ClientApplication:
         # Initializing the predictions classifier
         self.classifier = PredictionPipeline()
 
-        # Setting image path
-        self.image_path = "artifacts/user_inputs/input_image.png"
+        # Creating directory path
+        self.directory_path = "artifacts/user_inputs/"
 
         # Creating user_inputs directory
-        create_directories([self.image_path.parent])
-        
+        create_directories([self.directory_path])
+
 
 # Instantiate once and reuse
 client_application = ClientApplication()
@@ -48,7 +48,12 @@ def train_route():
     logger.info("Triggering model training...")
     
     # Running the pipeline
-    os.system("dvc repro")
+    try:
+        subprocess.run(["dvc", "repro"], check=True)
+        logger.info("Training completed successfully.")
+    except subprocess.CalledProcessError as exception_error:
+        logger.error(f"/train method DVC repro failed: {exception_error}")
+        return "Training failed", 500
 
 
 @app.route("/predict", methods=['POST'])
@@ -58,18 +63,30 @@ def predict_route():
     if not input_image:
         return jsonify({"error": "No image data received"}), 400
     
+    # Unique filepath
+    unique_id = uuid.uuid4().hex
+    image_path = Path(f"{ClientApplication.directory_path}/{unique_id}.png")
+
     try:
         # Save decoded image to file
-        decode_image_Base64(image_string=input_image, save_path=client_application.image_path)
+        decode_image_Base64(image_string=input_image, save_path=image_path)
 
         # Predict class
-        prediction_label, confidence = client_application.classifier.predict_with_confidence(image_path=client_application.image_path)
+        prediction_label, confidence = client_application.classifier.predict_with_confidence(image_path=image_path)
 
         return jsonify({"prediction": prediction_label, "confidence": f"{confidence* 100:.4f}%"})
     
     except Exception as exception_error:
         logger.error(f"Unexpected prediction error: {exception_error}")
         return jsonify({"error": str(exception_error)}), 500
+    
+    finally:
+        try:
+            if image_path.exists() and image_path.is_file():
+                image_path.unlink()
+
+        except Exception as exception_error:
+            logger.warning(f"Failed to delete user image {unique_id}: {exception_error}")
 
 
 if __name__ == "__main__":
