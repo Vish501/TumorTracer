@@ -26,3 +26,8 @@ hyperparameter_search:
 predictions:
   model: model/trained_model.keras
   class_indices: model/class_indices.json
+
+best_model:
+  source_dir: artifacts/model_training
+  destination_dir: model
+
