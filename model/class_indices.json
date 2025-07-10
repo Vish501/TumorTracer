@@ -1,0 +1,6 @@
+{
+    "adenocarcinoma": 0,
+    "large_cell_carcinoma": 1,
+    "normal": 2,
+    "squamous_cell_carcinoma": 3
+}

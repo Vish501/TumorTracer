@@ -1,4 +1,5 @@
 artifacts_root: artifacts
+model_root: model
 
 data_ingestion:
   root_dir: artifacts/data_ingestion
@@ -23,5 +24,5 @@ hyperparameter_search:
   root_dir: artifacts/hyperparameter_search
 
 predictions:
-  model: artifacts/model_training/trained_model_20250708_0949.keras
-  class_indices: artifacts/model_training/class_indices.json
+  model: model/trained_model.keras
+  class_indices: model/class_indices.json
