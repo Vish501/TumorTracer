@@ -21,7 +21,11 @@ class PredictionPipeline:
 
 
     def predict(self, image_path: Path):
-        self.prediction_constructor.predict(image_path=image_path)
+        return self.prediction_constructor.predict(image_path=image_path)
+
+
+    def predict_with_confidence(self, image_path: Path):
+        return self.prediction_constructor.predict_with_confidence(image_path=image_path)
 
 
 if __name__ == "__main__":
