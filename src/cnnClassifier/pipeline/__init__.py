@@ -1,4 +1,5 @@
 from .stage_01_data_ingestion import DataIngestionTrainingPipeline
 from .stage_02_base_model import BaseModelPipeline
 from .stage_03_model_training import ModelTrainingPipeline
+from .stage_04_model_selection import ModelSelectionPipeline
 from .predictions import PredictionPipeline
