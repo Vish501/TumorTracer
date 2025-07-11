@@ -29,3 +29,4 @@ predictions:
 
 model_selector:
   FILENAME_REGEX: "model_e\\d+_acc[\\d.]+_vacc([\\d.]+)\\.keras"
+  
