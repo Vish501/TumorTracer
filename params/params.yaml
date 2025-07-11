@@ -26,3 +26,6 @@ model_training:
 predictions:
   IMAGE_SIZE: [224, 224, 3] # As per VGG 16 model
   NORMALIZATION: 255.0
+
+model_selector:
+  FILENAME_REGEX: "model_e\\d+_acc[\\d.]+_vacc([\\d.]+)\\.keras"
