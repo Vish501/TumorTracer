@@ -64,7 +64,20 @@ class PredictionConfig:
     Immutable configuration class to store all parameters 
     and paths required for model prediction. 
     """
-    trained_model_path: Path                     # Path to the trained model that will be used to predict
+    trained_model_path: Path                    # Path to the trained model that will be used to predict
     class_indices_path: Path                    # Path to the model's class_indices
     params_image_size: tuple[int, int, int]     # Input image size, e.g., [224, 224, 3]
     params_normalization: float 				# Normalization factor used in training
+
+
+@dataclass(frozen=True)
+class ModelSelectorConfig:
+	"""
+	Immutable configuration class to store all parameters 
+	and paths required for selecting the best model. 
+	"""
+	source_dir: Path			# Directory with all the models
+	destination_dir: Path		# Directory to store best model and its class_indices
+	model_path: Path			# Path to save final model
+	indices_path: Path			# Path save indices related to the final model
+	filename_regex: str			# Regex pattern to extract relevent grading values
