@@ -48,3 +48,16 @@ stages:
           - model_training.AUGMENTATION_PARAMS.fill_mode
     outs:
       - artifacts/model_training/
+
+  model_selector:
+    cmd: python src/cnnClassifier/pipeline/stage_04_model_selection.py
+    deps:
+      - src/cnnClassifier/pipeline/stage_04_model_selection.py
+      - artifacts/model_training/
+      - config/config.yaml
+    params:
+      - params/params.yaml:
+          - model_selector.FILENAME_REGEX
+    outs:
+      - model/class_indices.json
+      - model/trained_model.keras
