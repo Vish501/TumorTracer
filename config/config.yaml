@@ -27,6 +27,8 @@ predictions:
   model: model/trained_model.keras
   class_indices: model/class_indices.json
 
-best_model:
+model_selector:
   source_dir: artifacts/model_training
   destination_dir: model
+  model_path: model/trained_model.keras
+  indices_path: model/class_indices.json
