@@ -2,7 +2,7 @@ from pathlib import Path
 
 from cnnClassifier.constants import CONFIG_FILE_PATH, PARAMS_FILE_PATH
 from cnnClassifier.utils.common import read_yaml, create_directories
-from cnnClassifier.entity.config_entity import DataIngestionConfig, BaseModelConfig, ModelTrainingConfig, PredictionConfig
+from cnnClassifier.entity.config_entity import DataIngestionConfig, BaseModelConfig, ModelTrainingConfig, PredictionConfig, ModelSelectorConfig
 from cnnClassifier import get_logger
 
 # Initializing the logger
@@ -153,4 +153,27 @@ class ConfigurationManager:
         logger.info(f"PredictionConfig created with: {predictions_config}")
 
         return predictions_config
+
+
+    def get_model_selector_config(self) -> ModelSelectorConfig:
+        """
+        Prepares and returns the ModelSelectorConfig object.
+
+        Returns:
+        - ModelSelectorConfig: Structured config for getting the best model
+        """
+        config = self.config.model_selector
+        params = self.params.model_selector
+
+        model_selector_config = ModelSelectorConfig(
+			source_dir=Path(config.source_dir),
+			destination_dir=Path(config.destination_dir),
+            model_path=Path(config.model_path),
+            indices_path=Path(config.indices_path),
+			filename_regex=params.FILENAME_REGEX,
+        )
+
+        logger.info(f"ModelSelectorConfig created with: {model_selector_config}")
+
+        return model_selector_config
     
