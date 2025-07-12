@@ -116,21 +116,21 @@ def predict_route():
 
     if not input_image:
         # Return a message if the input is missing
-        return jsonify({"error": "No image data received"}), 400
+        return jsonify([{"error": "No image data received"}])
     
     try:
         # Perform prediction
         prediction_label, confidence = client_application.save_and_predict(input_image)
 
         # Return structured JSON response
-        return jsonify({
+        return jsonify([{
                 "prediction": prediction_label,
-                "confidence": f"{confidence* 100:.4f}%"
-                })
+                "confidence": f"{confidence * 100:.4f}%"
+                }])
 
     except Exception as exception_error:
         logger.error(f"Unexpected prediction error: {exception_error}")
-        return jsonify({"error": str(exception_error)}), 500
+        return jsonify([{"error": str(exception_error)}])
     
 
 # ----------------------------
