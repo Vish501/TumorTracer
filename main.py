@@ -1,4 +1,4 @@
-from cnnClassifier.pipeline import DataIngestionTrainingPipeline, BaseModelPipeline, ModelTrainingPipeline
+from cnnClassifier.pipeline import DataIngestionTrainingPipeline, BaseModelPipeline, ModelTrainingPipeline, ModelSelectionPipeline
 from cnnClassifier import get_logger
 
 # Initializing the logger
@@ -27,6 +27,13 @@ if __name__ == "__main__":
         STAGE_NAME = "Model Training"
         logger.info(f">>>> {STAGE_NAME} stage has started <<<<")
         ModelTrainingPipeline.main() # Run the pipeline
+        logger.info(f">>>> {STAGE_NAME} stage has completed <<<<")
+        logger.info(f"******************************************")
+
+        # Running the Model Selection Pipeline
+        STAGE_NAME = "Model Selection"
+        logger.info(f">>>> {STAGE_NAME} stage has started <<<<")
+        ModelSelectionPipeline.main() # Run the pipeline
         logger.info(f">>>> {STAGE_NAME} stage has completed <<<<")
         logger.info(f"******************************************")
     
