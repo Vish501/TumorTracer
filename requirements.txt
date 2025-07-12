@@ -18,7 +18,7 @@ tqdm==4.67.1                  # Progress bars
 kaggle==1.7.4.5                # Downloading datasets from Kaggle
 
 # === Dev Tools & Utilities ===
-dotenv==1.1.1                 # Environment variables
+dotenv==0.9.9                 # Environment variables
 dvc==3.60.1                   # Data version control
 joblib==1.5.1                 # Parallel processing
 gdown==5.2.0                  # Google Drive downloader
