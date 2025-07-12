@@ -138,5 +138,4 @@ def predict_route():
 # ----------------------------
 
 if __name__ == "__main__":
-    # Start the application
     app.run(host='0.0.0.0', port=8080)
