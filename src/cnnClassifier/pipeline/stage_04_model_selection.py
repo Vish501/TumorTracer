@@ -10,7 +10,9 @@ STAGE_NAME = "Model Selection"
 
 class ModelSelectionPipeline:
     """
-    Pipeline class to selected the best model.
+    Thin wrapper around `Predictions` that
+    1. loads the prediction configuration once,
+    2. delegates all prediction calls.
     """
     @staticmethod
     def main():
