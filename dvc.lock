@@ -5,8 +5,8 @@ stages:
     deps:
     - path: config/config.yaml
       hash: md5
-      md5: 13d6d12fc7ebc4c9b47bcb70a699607e
-      size: 810
+      md5: 03801019217839da602f7c6a1e965d5a
+      size: 1081
     - path: src/cnnClassifier/pipeline/stage_01_data_ingestion.py
       hash: md5
       md5: f11c8ab2d2c4f42045917c22976b4cfe
@@ -22,8 +22,8 @@ stages:
     deps:
     - path: config/config.yaml
       hash: md5
-      md5: 13d6d12fc7ebc4c9b47bcb70a699607e
-      size: 810
+      md5: 03801019217839da602f7c6a1e965d5a
+      size: 1081
     - path: src/cnnClassifier/pipeline/stage_02_base_model.py
       hash: md5
       md5: b47bab1da94f5abb793d9256137de45d
@@ -41,14 +41,14 @@ stages:
     outs:
     - path: artifacts/base_model/updated_base_model.keras
       hash: md5
-      md5: 107b1d60a7fcf3da3eea3d17b73a7446
+      md5: d80a0e9aa0859d02a0afc2c88eefbe76
       size: 59342665
   model_training:
     cmd: python src/cnnClassifier/pipeline/stage_03_model_training.py
     deps:
     - path: artifacts/base_model/updated_base_model.keras
       hash: md5
-      md5: 107b1d60a7fcf3da3eea3d17b73a7446
+      md5: d80a0e9aa0859d02a0afc2c88eefbe76
       size: 59342665
     - path: artifacts/data_ingestion/Data
       hash: md5
@@ -57,8 +57,8 @@ stages:
       nfiles: 1000
     - path: config/config.yaml
       hash: md5
-      md5: 13d6d12fc7ebc4c9b47bcb70a699607e
-      size: 810
+      md5: 03801019217839da602f7c6a1e965d5a
+      size: 1081
     - path: src/cnnClassifier/pipeline/stage_03_model_training.py
       hash: md5
       md5: 686986002421e597f42941169077335f
@@ -75,7 +75,7 @@ stages:
         model_training.AUGMENTATION_PARAMS.zoom_range: 0.2
         model_training.BATCH_SIZE: 16
         model_training.CHECKPOINT: true
-        model_training.EPOCHS: 2
+        model_training.EPOCHS: 5
         model_training.IMAGE_SIZE:
         - 224
         - 224
@@ -86,6 +86,6 @@ stages:
     outs:
     - path: artifacts/model_training/
       hash: md5
-      md5: 749f5f9f87e92e54dcbebe7c2b42e5be.dir
-      size: 180438848
-      nfiles: 6
+      md5: 338db69ec03823307c8b3a2947e92c13.dir
+      size: 300730712
+      nfiles: 8
