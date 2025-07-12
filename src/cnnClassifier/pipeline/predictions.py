@@ -14,17 +14,17 @@ class PredictionPipeline:
     """
     Pipeline class to predict.
     """
-    def __init___(self):
+    def __init__(self) -> None:
         config_manager = ConfigurationManager()
         prediction_config = config_manager.get_prediction_config()
         self.prediction_constructor = Predictions(config=prediction_config)
 
 
-    def predict(self, image_path: Path):
+    def predict(self, image_path: Path) -> str:
         return self.prediction_constructor.predict(image_path=image_path)
 
 
-    def predict_with_confidence(self, image_path: Path):
+    def predict_with_confidence(self, image_path: Path) -> tuple[str, float]:
         return self.prediction_constructor.predict_with_confidence(image_path=image_path)
 
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         
         # Run the pipeline
         Predictions = PredictionPipeline()
-        Predictions.main(image_path="artifacts/data_ingestion/Data/train/normal/2 - Copy - Copy.png")
+        Predictions.predict(image_path="artifacts/data_ingestion/Data/train/normal/2 - Copy - Copy.png")
 
         logger.info(f">>>> {STAGE_NAME} stage has completed <<<<")
     
