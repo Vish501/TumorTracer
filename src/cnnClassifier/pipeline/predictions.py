@@ -12,7 +12,9 @@ STAGE_NAME = "Prediction"
 
 class PredictionPipeline:
     """
-    Pipeline class to predict.
+    Thin wrapper around `Predictions` that
+    1. Loads the prediction configuration once,
+    2. Delegates all prediction calls.
     """
     def __init__(self) -> None:
         config_manager = ConfigurationManager()
@@ -21,10 +23,17 @@ class PredictionPipeline:
 
 
     def predict(self, image_path: Path) -> str:
+        """
+        Return the predicted label for a single image.
+        """
         return self.prediction_constructor.predict(image_path=image_path)
 
 
     def predict_with_confidence(self, image_path: Path) -> tuple[str, float]:
+        """
+        Return (label, confidence) for a single image.
+        Confidence is a float in [0, 1].
+        """
         return self.prediction_constructor.predict_with_confidence(image_path=image_path)
 
 
