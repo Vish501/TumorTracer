@@ -179,11 +179,13 @@ This project uses **MLflow** to track experiments, log hyperparameters, monitor 
 
 ### Example Logged Metrics
 
-| Epoch | Accuracy | Validation Accuracy | Loss | Validation Loss |
-|-------|----------|---------------------|------|-----------------|
-| 1     | 0.61     | 0.65                | 0.75 | 0.68            |
-| 2     | 0.74     | 0.79                | 0.52 | 0.41            |
-
+| Epoch | Accuracy | Validation Accuracy | Loss    | Validation Loss |
+|-------|----------|---------------------|---------|-----------------|
+| 1     | 0.4617   | 0.5278              | 10.2913 | 4.2525          |
+| 2     | 0.6509   | 0.6111              | 3.3595  | 3.3058          |
+| 3     | 0.7341   | 0.5555              | 2.0722  | 6.2245          |
+| 4     | 0.7406   | 0.6389              | 2.9830  | 3.1352          |
+| 5     | 0.8124   | 0.7917              | 1.3135  | 2.7899          |
 
 ## 🧠 Model Selection Logic
 
@@ -247,12 +249,14 @@ Follow these steps to set up and run the project locally:
 
 ```bash
 git clone https://github.com/Vish501/TumorTracer.git
+```
+```bash
 cd TumorTracer
 ```
 
-**2. Setup Virtual Environment**
+**2. Setup Virtual Environment (Optional)**
 
-It's recommended to use a virtual environment to manage dependencies.
+It's recommended to use a virtual environment to manage dependencies. You can create and activate one using:
 
 ```bash
 conda create -p venv python=3.12.1 -y
@@ -263,23 +267,20 @@ conda activate venv/
 
 **3. Install Dependencies**
 
+Install the required packages:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-**4. Configure Kaggle API (for Data Ingestion)**
+**4. Configure Environment Variables**
 
-Ensure your Kaggle credentials are available:
+1. Create a .env file in your main directory `touch .env`.
+2. Go to the .env file `code .env`.
+3. Update the file with your Kaggle JSON credentials as a string, with the variable name `KAGGLE_JSON`.
+4. Update the file with your Working Directory path, with the variable name `WORKING_DIRECTORY`.
 
-```bash
-mkdir ~/.kaggle
-cp kaggle.json ~/.kaggle/
-chmod 600 ~/.kaggle/kaggle.json
-```
-
-Update the dataset name in `config/config.yaml` under `data_ingestion.kaggle_dataset`.
-
-**5. Run DVC Pipeline (Optional for Fresh Training)**
+**5. Run DVC Pipeline**
 
 To download data, prepare model, and train from scratch:
 
