@@ -177,7 +177,7 @@ This project uses **MLflow** to track experiments, log hyperparameters, monitor 
 - **Parameter Tracking**  
   Hyperparameters (e.g., batch size, epochs, optimizer, augmentation settings) are defined in `params/params.yaml` and logged for every training session.
 
-### Example Logged Metrics
+### Logged Metrics
 
 | Epoch | Accuracy | Validation Accuracy | Loss    | Validation Loss |
 |-------|----------|---------------------|---------|-----------------|
